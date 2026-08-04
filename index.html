@@ -758,9 +758,9 @@ body {
   </div>
 
   <div class="study-stats">
-    <div class="ss-item"><div class="ss-num blue">8</div><div class="ss-label">今日待办</div></div>
-    <div class="ss-item"><div class="ss-num orange">¥36K</div><div class="ss-label">待结算佣金</div></div>
-    <div class="ss-item"><div class="ss-num green">38%</div><div class="ss-label">本月业绩</div></div>
+    <div class="ss-item"><div class="ss-num blue" id="homeTodo">0</div><div class="ss-label">今日待办</div></div>
+    <div class="ss-item"><div class="ss-num orange" id="homeCommission">¥0</div><div class="ss-label">待结算佣金</div></div>
+    <div class="ss-item"><div class="ss-num green" id="homePerfPct">0%</div><div class="ss-label">本月业绩</div></div>
     <div class="ss-item"><div class="ss-num purple">21</div><div class="ss-label">英语连打卡</div></div>
   </div>
 
@@ -809,16 +809,16 @@ body {
     <div class="hero-banner">
       <div class="greeting">☀️ Su，今天也要加油！</div>
       <div class="main-text">本月业绩完成度</div>
-      <div class="sub-text">目标 ¥500,000 · 已完成 ¥192,000</div>
+      <div class="sub-text">目标 <span id="perfTarget">¥0</span> · 已完成 <span id="perfDone">¥0</span></div>
       <svg class="progress-ring" viewBox="0 0 36 36">
         <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="3"/>
-        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="white" stroke-width="3" stroke-dasharray="38.4, 100" stroke-linecap="round"/>
-        <text x="18" y="20.5" text-anchor="middle" fill="white" font-size="9" font-weight="700">38%</text>
+        <path id="perfRingBar" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="white" stroke-width="3" stroke-dasharray="0, 100" stroke-linecap="round"/>
+        <text x="18" y="20.5" text-anchor="middle" fill="white" font-size="9" font-weight="700" id="perfRingText">0%</text>
       </svg>
       <div class="hero-stats">
-        <div class="hero-stat"><div class="num">12</div><div class="label">财险出单</div></div>
-        <div class="hero-stat"><div class="num">5</div><div class="label">其他出单</div></div>
-        <div class="hero-stat"><div class="num">3</div><div class="label">保函出单</div></div>
+        <div class="hero-stat"><div class="num" id="heroCx">0</div><div class="label">财险出单</div></div>
+        <div class="hero-stat"><div class="num" id="heroQt">0</div><div class="label">其他出单</div></div>
+        <div class="hero-stat"><div class="num" id="heroBh">0</div><div class="label">保函出单</div></div>
       </div>
     </div>
 
@@ -875,12 +875,12 @@ body {
   <div class="subtab-content" id="perf-goal">
     <div class="perf-header-card">
       <div style="font-size:14px;opacity:0.85">2026年8月 · 月度目标</div>
-      <div style="font-size:32px;font-weight:700;margin:8px 0">¥192,000</div>
-      <div style="font-size:13px;opacity:0.85">目标 ¥500,000</div>
-      <div class="perf-progress-bar"><div class="perf-progress-fill" style="width:38.4%"></div></div>
+      <div style="font-size:32px;font-weight:700;margin:8px 0" id="goalDone">¥0</div>
+      <div style="font-size:13px;opacity:0.85">目标 <span id="goalTarget">¥0</span></div>
+      <div class="perf-progress-bar"><div class="perf-progress-fill" id="goalBar" style="width:0%"></div></div>
       <div class="perf-target-row">
-        <div><div class="perf-target-label">保费收入</div><div style="font-size:18px;font-weight:600">¥156,000</div></div>
-        <div style="text-align:right"><div class="perf-target-label">保函手续费</div><div style="font-size:18px;font-weight:600">¥36,000</div></div>
+        <div><div class="perf-target-label">保费收入</div><div style="font-size:18px;font-weight:600" id="goalPremium">¥0</div></div>
+        <div style="text-align:right"><div class="perf-target-label">保函手续费</div><div style="font-size:18px;font-weight:600" id="goalFee">¥0</div></div>
       </div>
     </div>
     <div class="filter-row">
@@ -892,7 +892,7 @@ body {
       <div class="pb-card"><div class="pb-label">本月新单保费</div><div class="pb-value up">¥156,000</div><div class="pb-sub">↑ 较上月 +23%</div></div>
       <div class="pb-card"><div class="pb-label">续保保费</div><div class="pb-value up">¥36,000</div><div class="pb-sub">3笔续保成功</div></div>
       <div class="pb-card"><div class="pb-label">保函手续费</div><div class="pb-value up">¥36,000</div><div class="pb-sub">2份保函出具</div></div>
-      <div class="pb-card"><div class="pb-label">预计佣金</div><div class="pb-value" style="color:var(--primary)">¥19,200</div><div class="pb-sub">约费率10%</div></div>
+      <div class="pb-card"><div class="pb-label">预计佣金</div><div class="pb-value" style="color:var(--primary)" id="goalCommission">¥0</div><div class="pb-sub">约费率10%</div></div>
     </div>
     <div class="section-label">业绩趋势</div>
     <div class="card">
@@ -911,19 +911,19 @@ body {
   <!-- 收入 -->
   <div class="subtab-content" id="perf-income">
     <div class="finance-overview">
-      <div class="fo-item income"><div class="fo-value" style="color:var(--primary)">¥192K</div><div class="fo-label">本月保费</div></div>
-      <div class="fo-item commission"><div class="fo-value" style="color:#1890FF">¥19.2K</div><div class="fo-label">预计佣金</div></div>
-      <div class="fo-item guarantee-fee"><div class="fo-value" style="color:#FA8C16">¥36K</div><div class="fo-label">保函手续费</div></div>
+      <div class="fo-item income"><div class="fo-value" style="color:var(--primary)" id="incPremium">¥0</div><div class="fo-label">本月保费</div></div>
+      <div class="fo-item commission"><div class="fo-value" style="color:#1890FF" id="incCommission">¥0</div><div class="fo-label">预计佣金</div></div>
+      <div class="fo-item guarantee-fee"><div class="fo-value" style="color:#FA8C16" id="incFee">¥0</div><div class="fo-label">保函手续费</div></div>
     </div>
     <div class="section-label">📝 记一笔</div>
     <div class="card visit-form">
       <div class="form-row">
-        <div class="form-group"><label>金额（元）</label><input type="number" placeholder="0.00"></div>
-        <div class="form-group"><label>收入类型</label><select><option>保费收入</option><option>佣金到账</option><option>保函手续费</option><option>续保奖励</option></select></div>
+        <div class="form-group"><label>金额（元）</label><input type="number" id="incAmount" placeholder="0.00"></div>
+        <div class="form-group"><label>收入类型</label><select id="incType"><option>保费收入</option><option>佣金到账</option><option>保函手续费</option><option>续保奖励</option></select></div>
       </div>
       <div class="form-group"><label>关联客户/项目（选填）</label><input type="text" placeholder="如：华为企财险"></div>
       <div class="form-group"><label>入账日期</label><input type="date" value="2026-08-03"></div>
-      <button class="btn-primary" style="width:100%">记账</button>
+      <button class="btn-primary" style="width:100%" onclick="saveIncome()">记账</button>
     </div>
     <div class="section-label">📊 收入构成占比</div>
     <div class="card">
@@ -933,15 +933,15 @@ body {
       <div style="display:flex;align-items:center;gap:16px">
         <svg width="120" height="120" viewBox="0 0 42 42">
           <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#E8F0FE" stroke-width="4"/>
-          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#4A90D9" stroke-width="4" stroke-dasharray="81.25 100" stroke-dashoffset="25"/>
-          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#52C41A" stroke-width="4" stroke-dasharray="12.5 100" stroke-dashoffset="-56.25"/>
-          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#FAAD14" stroke-width="4" stroke-dasharray="6.25 100" stroke-dashoffset="-68.75"/>
+          <circle id="pieSeg1" cx="21" cy="21" r="15.915" fill="transparent" stroke="#4A90D9" stroke-width="4" stroke-dasharray="0 100" stroke-dashoffset="25"/>
+          <circle id="pieSeg2" cx="21" cy="21" r="15.915" fill="transparent" stroke="#52C41A" stroke-width="4" stroke-dasharray="0 100" stroke-dashoffset="0"/>
+          <circle id="pieSeg3" cx="21" cy="21" r="15.915" fill="transparent" stroke="#FAAD14" stroke-width="4" stroke-dasharray="0 100" stroke-dashoffset="0"/>
         </svg>
         <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--primary)"></span><span style="font-size:12px">企财险 65%</span></div>
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--success)"></span><span style="font-size:12px">工程险 15%</span></div>
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--warning)"></span><span style="font-size:12px">保函手续费 12.5%</span></div>
-          <div style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#722ED1"></span><span style="font-size:12px">其他 7.5%</span></div>
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--primary)"></span><span style="font-size:12px" id="pieCx">财险 0%</span></div>
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--success)"></span><span style="font-size:12px" id="pieBh">保函 0%</span></div>
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--warning)"></span><span style="font-size:12px" id="pieOther">其他 0%</span></div>
+          <div style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#722ED1"></span><span style="font-size:12px">续保奖励</span></div>
         </div>
       </div>
     </div>
@@ -1153,10 +1153,10 @@ body {
   <!-- 保单（财产险） -->
   <div class="subtab-content" id="cl-policy">
     <div class="policy-stats-grid">
-      <div class="ps-card blue"><div class="ps-num" style="color:var(--primary)">28</div><div class="ps-label">有效保单</div></div>
-      <div class="ps-card green"><div class="ps-num" style="color:var(--success)">¥192K</div><div class="ps-label">本月保费</div></div>
-      <div class="ps-card orange"><div class="ps-num" style="color:var(--warning)">3</div><div class="ps-label">即将到期</div></div>
-      <div class="ps-card red"><div class="ps-num" style="color:var(--danger)">5</div><div class="ps-label">待续保</div></div>
+      <div class="ps-card blue"><div class="ps-num" style="color:var(--primary)" id="psValid">0</div><div class="ps-label">有效保单</div></div>
+      <div class="ps-card green"><div class="ps-num" style="color:var(--success)" id="psPremium">¥0</div><div class="ps-label">本月保费</div></div>
+      <div class="ps-card orange"><div class="ps-num" style="color:var(--warning)" id="psExpiring">0</div><div class="ps-label">即将到期</div></div>
+      <div class="ps-card red"><div class="ps-num" style="color:var(--danger)" id="psRenew">0</div><div class="ps-label">待续保</div></div>
     </div>
     <div class="section-label">近14天到期</div>
     <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px">
@@ -1202,8 +1202,8 @@ body {
     <div class="card" style="margin-top:12px">
       <div class="card-title">📊 保函统计</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
-        <div style="text-align:center;padding:12px;background:#FAFBFC;border-radius:10px"><div style="font-size:22px;font-weight:700;color:var(--primary)">¥1,800万</div><div style="font-size:11px;color:var(--text-light);margin-top:2px">在保余额</div></div>
-        <div style="text-align:center;padding:12px;background:#FAFBFC;border-radius:10px"><div style="font-size:22px;font-weight:700;color:var(--success)">¥36,000</div><div style="font-size:11px;color:var(--text-light);margin-top:2px">累计手续费</div></div>
+        <div style="text-align:center;padding:12px;background:#FAFBFC;border-radius:10px"><div style="font-size:22px;font-weight:700;color:var(--primary)" id="gtBalance">¥0</div><div style="font-size:11px;color:var(--text-light);margin-top:2px">在保余额</div></div>
+        <div style="text-align:center;padding:12px;background:#FAFBFC;border-radius:10px"><div style="font-size:22px;font-weight:700;color:var(--success)" id="gtFee">¥0</div><div style="font-size:11px;color:var(--text-light);margin-top:2px">累计手续费</div></div>
       </div>
     </div>
   </div>
@@ -1211,32 +1211,26 @@ body {
   <!-- 拜访 -->
   <div class="subtab-content" id="cl-visit">
     <div class="client-summary">
-      <div class="cs-item"><div class="cs-num" style="color:var(--primary)">0</div><div class="cs-label">今日拜访</div></div>
-      <div class="cs-item"><div class="cs-num" style="color:var(--warning)">2</div><div class="cs-label">本周计划</div></div>
-      <div class="cs-item"><div class="cs-num" style="color:var(--success)">18</div><div class="cs-label">本月累计</div></div>
+      <div class="cs-item"><div class="cs-num" style="color:var(--primary)" id="vsToday">0</div><div class="cs-label">今日拜访</div></div>
+      <div class="cs-item"><div class="cs-num" style="color:var(--warning)" id="vsWeek">0</div><div class="cs-label">本周计划</div></div>
+      <div class="cs-item"><div class="cs-num" style="color:var(--success)" id="vsMonth">0</div><div class="cs-label">本月累计</div></div>
     </div>
-    <div class="section-label">📅 拜访日历</div>
-    <div class="card">
-      <div class="visit-calendar">
-        <div class="cal-day header">一</div><div class="cal-day header">二</div><div class="cal-day header">三</div><div class="cal-day header">四</div><div class="cal-day header">五</div><div class="cal-day header">六</div><div class="cal-day header">日</div>
-        <div class="cal-day" style="visibility:hidden"></div>
-        <div class="cal-day has-visit">27</div><div class="cal-day">28</div><div class="cal-day has-visit">29</div><div class="cal-day">30</div><div class="cal-day">31</div><div class="cal-day">1</div><div class="cal-day">2</div>
-        <div class="cal-day today">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div><div class="cal-day">9</div>
-      </div>
-    </div>
+    <div class="section-label">📅 拜访日历（可翻月查看往期，点日期看当天）</div>
+    <div class="card"><div class="month-cal" id="visitCal"></div></div>
     <div class="section-label">✏️ 新增拜访记录</div>
     <div class="card visit-form">
-      <div class="form-group"><label>拜访对象</label><select><option>请选择客户</option><option>张建国 - 万达商管</option><option>李明 - 中建三局</option><option>陈芳 - 华为技术</option><option>周强 - 中铁建设</option></select></div>
+      <div class="form-group"><label>拜访对象</label><input type="text" id="vsClient" placeholder="如：张建国 - 万达商管"></div>
       <div class="form-row">
-        <div class="form-group"><label>拜访日期</label><input type="date" value="2026-08-03"></div>
-        <div class="form-group"><label>拜访类型</label><select><option>上门拜访</option><option>电话沟通</option><option>微信联络</option><option>视频会议</option></select></div>
+        <div class="form-group"><label>拜访日期</label><input type="date" id="vsDate"></div>
+        <div class="form-group"><label>拜访类型</label><select id="vsType"><option>上门拜访</option><option>电话沟通</option><option>微信联络</option><option>视频会议</option></select></div>
       </div>
-      <div class="form-group"><label>拜访目的</label><select><option>续保跟进</option><option>新单拓展</option><option>保函需求</option><option>理赔服务</option><option>日常维护</option></select></div>
-      <div class="form-group"><label>备注（选填）</label><textarea placeholder="客户反馈、下一步计划..." rows="2" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;resize:none"></textarea></div>
-      <button class="btn-primary" style="width:100%">添加到拜访清单</button>
+      <div class="form-group"><label>拜访目的</label><select id="vsPurpose"><option>续保跟进</option><option>新单拓展</option><option>保函需求</option><option>理赔服务</option><option>日常维护</option></select></div>
+      <div class="form-group"><label>备注（选填）</label><textarea id="vsNote" placeholder="客户反馈、下一步计划..." rows="2" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;resize:none"></textarea></div>
+      <button class="btn-primary" style="width:100%" onclick="addVisit()">添加到拜访清单</button>
     </div>
-    <div class="section-label">📋 我的拜访记录</div>
-    <div class="card"><div class="empty-state"><div class="icon">✈️</div><p>拜访清单还空着，安排一次客户见面吧</p></div></div>
+    <div class="section-label">📋 我的拜访记录 <span id="visitListTitle" style="font-weight:400;color:var(--text-light)"></span></div>
+    <div class="card" style="padding:0" id="visitList"></div>
+    <div class="wb-modal" id="visitModal"></div>
   </div>
 </div>
 
@@ -1244,7 +1238,7 @@ body {
 <div class="page" id="page-todo">
   <div class="page-header">
     <div><div class="page-title">工作台</div><div class="page-subtitle">待办事项 · 工作日志</div></div>
-    <span style="font-size:13px;color:var(--primary)">2/5 完成</span>
+    <span style="font-size:13px;color:var(--primary)" id="todoSummary">0/0 完成</span>
   </div>
 
   <div class="subtabs">
@@ -1337,29 +1331,25 @@ body {
       </div>
     </div>
     <div class="study-stats">
-      <div class="ss-item"><div class="ss-num green">7</div><div class="ss-label">连续(天)</div></div>
-      <div class="ss-item"><div class="ss-num blue">5/7</div><div class="ss-label">本周达标</div></div>
-      <div class="ss-item"><div class="ss-num orange">7.2h</div><div class="ss-label">平均睡眠</div></div>
-      <div class="ss-item"><div class="ss-num purple">23:12</div><div class="ss-label">平均入睡</div></div>
+      <div class="ss-item"><div class="ss-num green" id="rtSleepStreak">0</div><div class="ss-label">连续(天)</div></div>
+      <div class="ss-item"><div class="ss-num blue" id="rtSleepWeek">0/7</div><div class="ss-label">本周达标</div></div>
+      <div class="ss-item"><div class="ss-num orange" id="rtSleepAvg">--</div><div class="ss-label">平均睡眠</div></div>
+      <div class="ss-item"><div class="ss-num purple" id="rtSleepBed">--</div><div class="ss-label">平均入睡</div></div>
     </div>
-    <div class="section-label">近14天睡眠打卡</div>
-    <div class="card">
-      <div class="heat-grid">
-        <div class="heat-day head">一</div><div class="heat-day head">二</div><div class="heat-day head">三</div><div class="heat-day head">四</div><div class="heat-day head">五</div><div class="heat-day head">六</div><div class="heat-day head">日</div>
-        <div class="heat-day lv3">21</div><div class="heat-day lv3">22</div><div class="heat-day lv2">23</div><div class="heat-day lv3">24</div><div class="heat-day lv1">25</div><div class="heat-day lv3">26</div><div class="heat-day lv3">27</div>
-        <div class="heat-day lv3">28</div><div class="heat-day lv2">29</div><div class="heat-day lv3">30</div><div class="heat-day lv3">31</div><div class="heat-day lv1">1</div><div class="heat-day lv3">2</div><div class="heat-day lv3">3</div>
-      </div>
-      <div class="heat-legend"><span>浅</span><span class="heat-day lv1" style="width:14px;height:14px;border-radius:4px"></span><span class="heat-day lv2" style="width:14px;height:14px;border-radius:4px"></span><span class="heat-day lv3" style="width:14px;height:14px;border-radius:4px;color:#fff">深</span></div>
-    </div>
+    <div class="section-label">📅 睡眠打卡日历（可翻月查看往期）</div>
+    <div class="card"><div class="month-cal" id="rtSleepCal"></div></div>
     <div class="section-label">✏️ 记录今晚睡眠</div>
     <div class="card visit-form">
       <div class="form-row">
-        <div class="form-group"><label>计划入睡</label><input type="time" value="23:30"></div>
-        <div class="form-group"><label>计划起床</label><input type="time" value="06:30"></div>
+        <div class="form-group"><label>入睡时间</label><input type="time" id="sleepBed" value="23:30"></div>
+        <div class="form-group"><label>起床时间</label><input type="time" id="sleepRise" value="06:30"></div>
       </div>
-      <div class="form-group"><label>睡眠时长目标</label><select><option>7.5 小时</option><option>7 小时</option><option>8 小时</option><option>6.5 小时</option></select></div>
-      <div class="form-group"><label>今日备注（选填）</label><textarea placeholder="今天状态怎么样？" rows="2" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;resize:none"></textarea></div>
-      <button class="btn-primary" style="width:100%">标记已早睡</button>
+      <div class="form-row">
+        <div class="form-group"><label>睡眠时长(小时)</label><input type="number" id="sleepDur" value="7.5" step="0.5"></div>
+        <div class="form-group"><label>日期</label><input type="date" id="sleepDate"></div>
+      </div>
+      <div class="form-group"><label>今日备注（选填）</label><textarea id="sleepNote" placeholder="今天状态怎么样？" rows="2" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;resize:none"></textarea></div>
+      <button class="btn-primary" style="width:100%" onclick="saveSleep()">标记已早睡</button>
     </div>
     <div class="section-label">📊 睡眠分析</div>
     <div class="card"><div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px"><button class="filter-tab active">按周</button><button class="filter-tab">按月</button></div><div class="perf-chart-placeholder" style="height:160px">📈 入睡时间趋势图</div></div>
@@ -1377,25 +1367,22 @@ body {
       </div>
     </div>
     <div class="study-stats">
-      <div class="ss-item"><div class="ss-num green">12</div><div class="ss-label">连续(天)</div></div>
-      <div class="ss-item"><div class="ss-num blue">6/7</div><div class="ss-label">本周达标</div></div>
-      <div class="ss-item"><div class="ss-num orange">06:24</div><div class="ss-label">平均起床</div></div>
-      <div class="ss-item"><div class="ss-num purple">32</div><div class="ss-label">本月(天)</div></div>
+      <div class="ss-item"><div class="ss-num green" id="rtRiseStreak">0</div><div class="ss-label">连续(天)</div></div>
+      <div class="ss-item"><div class="ss-num blue" id="rtRiseWeek">0/7</div><div class="ss-label">本周达标</div></div>
+      <div class="ss-item"><div class="ss-num orange" id="rtRiseAvg">--</div><div class="ss-label">平均起床</div></div>
+      <div class="ss-item"><div class="ss-num purple" id="rtRiseMonth">0</div><div class="ss-label">本月(天)</div></div>
     </div>
-    <div class="section-label">近14天早起打卡</div>
-    <div class="card">
-      <div class="heat-grid">
-        <div class="heat-day head">一</div><div class="heat-day head">二</div><div class="heat-day head">三</div><div class="heat-day head">四</div><div class="heat-day head">五</div><div class="heat-day head">六</div><div class="heat-day head">日</div>
-        <div class="heat-day lv3">21</div><div class="heat-day lv3">22</div><div class="heat-day lv1">23</div><div class="heat-day lv3">24</div><div class="heat-day lv3">25</div><div class="heat-day lv3">26</div><div class="heat-day lv1">27</div>
-        <div class="heat-day lv3">28</div><div class="heat-day lv3">29</div><div class="heat-day lv3">30</div><div class="heat-day lv3">31</div><div class="heat-day lv3">1</div><div class="heat-day lv1">2</div><div class="heat-day lv3">3</div>
-      </div>
-    </div>
+    <div class="section-label">📅 早起打卡日历（可翻月查看往期）</div>
+    <div class="card"><div class="month-cal" id="rtRiseCal"></div></div>
     <div class="section-label">✏️ 记录早起</div>
     <div class="card visit-form">
-      <div class="form-group"><label>实际起床时间</label><input type="time" value="06:30"></div>
-      <div class="form-group"><label>是否达标（早于 07:00）</label><select><option>达标 ✓</option><option>未达标</option></select></div>
-      <div class="form-group"><label>今日备注（选填）</label><textarea placeholder="早起做了什么？" rows="2" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;resize:none"></textarea></div>
-      <button class="btn-primary" style="width:100%">标记已早起</button>
+      <div class="form-row">
+        <div class="form-group"><label>实际起床时间</label><input type="time" id="riseTime" value="06:30"></div>
+        <div class="form-group"><label>日期</label><input type="date" id="riseDate"></div>
+      </div>
+      <div class="form-group"><label>是否达标（早于 07:00）</label><select id="riseOk"><option value="1">达标 ✓</option><option value="0">未达标</option></select></div>
+      <div class="form-group"><label>今日备注（选填）</label><textarea id="riseNote" placeholder="早起做了什么？" rows="2" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;resize:none"></textarea></div>
+      <button class="btn-primary" style="width:100%" onclick="saveRise()">标记已早起</button>
     </div>
   </div>
 
@@ -1411,9 +1398,9 @@ body {
       </div>
     </div>
     <div class="study-stats">
-      <div class="ss-item"><div class="ss-num green">86</div><div class="ss-label">坚持(天)</div></div>
-      <div class="ss-item"><div class="ss-num blue">1720</div><div class="ss-label">未吸(支)</div></div>
-      <div class="ss-item"><div class="ss-num orange">¥2,064</div><div class="ss-label">省下(元)</div></div>
+      <div class="ss-item"><div class="ss-num green" id="rtSmokeDays">0</div><div class="ss-label">坚持(天)</div></div>
+      <div class="ss-item"><div class="ss-num blue" id="rtSmokeNot">0</div><div class="ss-label">未吸(支)</div></div>
+      <div class="ss-item"><div class="ss-num orange" id="rtSmokeSave">¥0</div><div class="ss-label">省下(元)</div></div>
       <div class="ss-item"><div class="ss-num purple">14%</div><div class="ss-label">肺功恢复</div></div>
     </div>
     <div class="section-label">🎯 戒烟目标</div>
@@ -1424,10 +1411,13 @@ body {
     </div>
     <div class="section-label">✏️ 今日打卡</div>
     <div class="card visit-form">
-      <div class="form-group"><label>今日是否吸烟</label><select><option>没有吸烟 ✓</option><option>破戒了...</option></select></div>
-      <div class="form-group"><label>想吸的冲动次数</label><input type="number" value="2" placeholder="如 2"></div>
-      <div class="form-group"><label>今日备注（选填）</label><textarea placeholder="如何转移的注意力？" rows="2" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;resize:none"></textarea></div>
-      <button class="btn-primary" style="width:100%">打卡</button>
+      <div class="form-row">
+        <div class="form-group"><label>今日是否吸烟</label><select id="smokeRes"><option value="no">没有吸烟 ✓</option><option value="smoked">破戒了...</option></select></div>
+        <div class="form-group"><label>日期</label><input type="date" id="smokeDate"></div>
+      </div>
+      <div class="form-group"><label>想吸的冲动次数</label><input type="number" id="smokeUrge" placeholder="如 2"></div>
+      <div class="form-group"><label>今日备注（选填）</label><textarea id="smokeNote" placeholder="如何转移的注意力？" rows="2" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;resize:none"></textarea></div>
+      <button class="btn-primary" style="width:100%" onclick="saveSmoke()">打卡</button>
     </div>
     <div class="section-label">📊 戒烟收益</div>
     <div class="card"><div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px"><button class="filter-tab active">按周</button><button class="filter-tab">按月</button></div><div class="perf-chart-placeholder" style="height:160px">📈 累计省钱 / 未吸烟支数</div></div>
@@ -1445,10 +1435,10 @@ body {
       </div>
     </div>
     <div class="study-stats">
-      <div class="ss-item"><div class="ss-num green">-2.5</div><div class="ss-label">本月(kg)</div></div>
-      <div class="ss-item"><div class="ss-num blue">72.5</div><div class="ss-label">当前(kg)</div></div>
-      <div class="ss-item"><div class="ss-num orange">22.4</div><div class="ss-label">BMI</div></div>
-      <div class="ss-item"><div class="ss-num purple">18</div><div class="ss-label">打卡(天)</div></div>
+      <div class="ss-item"><div class="ss-num green" id="rtWeightDelta">-- kg</div><div class="ss-label">本月(kg)</div></div>
+      <div class="ss-item"><div class="ss-num blue" id="rtWeightCur">--</div><div class="ss-label">当前(kg)</div></div>
+      <div class="ss-item"><div class="ss-num orange" id="rtWeightBmi">--</div><div class="ss-label">BMI</div></div>
+      <div class="ss-item"><div class="ss-num purple" id="rtWeightDays">0</div><div class="ss-label">打卡(天)</div></div>
     </div>
     <div class="section-label">📈 体重趋势</div>
     <div class="card">
@@ -1464,11 +1454,11 @@ body {
     <div class="section-label">✏️ 记录体重</div>
     <div class="card visit-form">
       <div class="form-row">
-        <div class="form-group"><label>今日体重(kg)</label><input type="number" step="0.1" placeholder="如 72.5"></div>
-        <div class="form-group"><label>日期</label><input type="date" value="2026-08-03"></div>
+        <div class="form-group"><label>今日体重(kg)</label><input type="number" step="0.1" id="weightKg" placeholder="如 72.5"></div>
+        <div class="form-group"><label>日期</label><input type="date" id="weightDate"></div>
       </div>
-      <div class="form-group"><label>备注（选填）</label><textarea placeholder="饮食/运动情况..." rows="2" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;resize:none"></textarea></div>
-      <button class="btn-primary" style="width:100%">保存</button>
+      <div class="form-group"><label>备注（选填）</label><textarea id="weightNote" placeholder="饮食/运动情况..." rows="2" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;resize:none"></textarea></div>
+      <button class="btn-primary" style="width:100%" onclick="saveWeight()">保存</button>
     </div>
   </div>
 </div>
@@ -1648,14 +1638,8 @@ body {
       <div class="ss-item"><div class="ss-num purple">9</div><div class="ss-label">累计文章</div></div>
     </div>
 
-    <div class="section-label">近14天打卡</div>
-    <div class="card">
-      <div class="heat-grid" id="chkHeat">
-        <div class="heat-day head">一</div><div class="heat-day head">二</div><div class="heat-day head">三</div><div class="heat-day head">四</div><div class="heat-day head">五</div><div class="heat-day head">六</div><div class="heat-day head">日</div>
-        <div class="heat-day lv3">21</div><div class="heat-day lv3">22</div><div class="heat-day lv3">23</div><div class="heat-day lv3">24</div><div class="heat-day lv3">25</div><div class="heat-day lv3">26</div><div class="heat-day lv3">27</div>
-        <div class="heat-day lv3">28</div><div class="heat-day lv3">29</div><div class="heat-day lv3">30</div><div class="heat-day lv3">31</div><div class="heat-day lv3">1</div><div class="heat-day lv3">2</div><div class="heat-day lv3">3</div>
-      </div>
-    </div>
+    <div class="section-label">📅 打卡日历（可翻月查看往期）</div>
+    <div class="card"><div class="month-cal" id="chkHeat"></div></div>
 
     <div class="section-label">✏️ 学习记录</div>
     <div class="card visit-form">
@@ -1682,33 +1666,27 @@ body {
     <div class="main-text">本周运动</div>
     <div class="sub-text">已完成 3 次 · 目标 4 次</div>
     <div class="countdown-box" style="position:absolute;right:16px;top:50%;transform:translateY(-50%)">
-      <div class="countdown-num" style="color:white">3/4</div>
+      <div class="countdown-num" id="fitHeroNum" style="color:white">0/4</div>
       <div class="countdown-label" style="color:white;opacity:.8">本周次数</div>
     </div>
   </div>
 
   <div class="study-stats">
-    <div class="ss-item"><div class="ss-num orange">3</div><div class="ss-label">本周(次)</div></div>
-    <div class="ss-item"><div class="ss-num blue">180</div><div class="ss-label">累计(分)</div></div>
-    <div class="ss-item"><div class="ss-num green">1200</div><div class="ss-label">消耗(kcal)</div></div>
-    <div class="ss-item"><div class="ss-num purple">12</div><div class="ss-label">本月(次)</div></div>
+    <div class="ss-item"><div class="ss-num orange" id="fitWeek">0</div><div class="ss-label">本周(次)</div></div>
+    <div class="ss-item"><div class="ss-num blue" id="fitMin">0</div><div class="ss-label">累计(分)</div></div>
+    <div class="ss-item"><div class="ss-num green" id="fitKcal">0</div><div class="ss-label">消耗(kcal)</div></div>
+    <div class="ss-item"><div class="ss-num purple" id="fitMonth">0</div><div class="ss-label">本月(次)</div></div>
   </div>
 
   <div class="section-label">运动类型</div>
-  <div class="guarantee-types">
+  <div class="guarantee-types" id="fitTypes">
     <div class="gt-item active"><div class="gt-icon">🏃</div><div class="gt-name">跑步</div><div class="gt-count">8</div></div>
     <div class="gt-item"><div class="gt-icon">🏋️</div><div class="gt-name">力量</div><div class="gt-count">5</div></div>
     <div class="gt-item"><div class="gt-icon">🏊</div><div class="gt-name">游泳</div><div class="gt-count">3</div></div>
   </div>
 
-  <div class="section-label">近14天打卡</div>
-  <div class="card">
-    <div class="heat-grid">
-      <div class="heat-day head">一</div><div class="heat-day head">二</div><div class="heat-day head">三</div><div class="heat-day head">四</div><div class="heat-day head">五</div><div class="heat-day head">六</div><div class="heat-day head">日</div>
-      <div class="heat-day lv3">21</div><div class="heat-day lv1">22</div><div class="heat-day lv1">23</div><div class="heat-day lv3">24</div><div class="heat-day lv1">25</div><div class="heat-day lv3">26</div><div class="heat-day lv1">27</div>
-      <div class="heat-day lv3">28</div><div class="heat-day lv1">29</div><div class="heat-day lv3">30</div><div class="heat-day lv1">31</div><div class="heat-day lv3">1</div><div class="heat-day lv1">2</div><div class="heat-day lv3">3</div>
-    </div>
-  </div>
+  <div class="section-label">📅 运动打卡日历（可翻月查看往期）</div>
+  <div class="card"><div class="month-cal" id="fitCal"></div></div>
 
   <div class="section-label">🏃 跑步 · 运动轨迹</div>
   <div class="card">
@@ -1736,13 +1714,15 @@ body {
   <div class="section-label">✏️ 记录运动</div>
   <div class="card visit-form">
     <div class="form-row">
-      <div class="form-group"><label>运动类型</label><select><option>跑步</option><option>力量训练</option><option>游泳</option><option>骑行</option></select></div>
-      <div class="form-group"><label>时长(分钟)</label><input type="number" placeholder="如 30"></div>
+      <div class="form-group"><label>运动类型</label><select id="fitType"><option>跑步</option><option>力量训练</option><option>游泳</option><option>骑行</option></select></div>
+      <div class="form-group"><label>时长(分钟)</label><input type="number" id="fitDur" placeholder="如 30"></div>
     </div>
-    <div class="form-group"><label>消耗热量(kcal，选填)</label><input type="number" placeholder="如 200"></div>
-    <div class="form-group"><label>日期</label><input type="date" value="2026-08-03"></div>
-    <div class="form-group"><label>备注（选填）</label><textarea placeholder="运动感受..." rows="2" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;resize:none"></textarea></div>
-    <button class="btn-primary" style="width:100%">保存打卡</button>
+    <div class="form-row">
+      <div class="form-group"><label>消耗热量(kcal，选填)</label><input type="number" id="fitKcalIn" placeholder="如 200"></div>
+      <div class="form-group"><label>日期</label><input type="date" id="fitDate"></div>
+    </div>
+    <div class="form-group"><label>备注（选填）</label><textarea id="fitNote" placeholder="运动感受..." rows="2" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;resize:none"></textarea></div>
+    <button class="btn-primary" style="width:100%" onclick="saveFitness()">保存打卡</button>
   </div>
 </div>
 
@@ -1751,40 +1731,50 @@ body {
   <div class="page-header"><div><div class="page-title">记账存钱</div><div class="page-subtitle">收支清晰，存钱有动力</div></div><button class="badge-btn">编辑状态</button></div>
 
   <div class="finance-overview">
-    <div class="fo-item income"><div class="fo-value" style="color:var(--primary)">¥3,200</div><div class="fo-label">本月支出</div></div>
-    <div class="fo-item commission"><div class="fo-value" style="color:#1890FF">¥19,200</div><div class="fo-label">本月收入</div></div>
-    <div class="fo-item guarantee-fee"><div class="fo-value" style="color:var(--success)">¥5,000</div><div class="fo-label">已存钱</div></div>
+    <div class="fo-item income"><div class="fo-value" style="color:var(--primary)" id="moneyExp">¥0</div><div class="fo-label">本月支出</div></div>
+    <div class="fo-item commission"><div class="fo-value" style="color:#1890FF" id="moneyInc">¥0</div><div class="fo-label">本月收入</div></div>
+    <div class="fo-item guarantee-fee"><div class="fo-value" style="color:var(--success)" id="moneySaved">¥0</div><div class="fo-label">已存钱</div></div>
   </div>
 
   <div class="section-label">💰 储蓄目标</div>
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
       <span style="font-size:14px;font-weight:600">年度存款目标</span>
-      <span style="font-size:13px;color:var(--primary)">¥12,000 / ¥50,000</span>
+      <span style="font-size:13px;color:var(--primary)"><span id="saveCur">¥0</span> / <span id="saveGoal">¥0</span></span>
     </div>
-    <div class="mini-bar" style="height:10px"><div class="mini-bar-fill" style="width:24%;background:var(--success)"></div></div>
-    <div style="font-size:11px;color:var(--text-light);margin-top:6px">已完成 24%，继续加油 💪</div>
+    <div class="mini-bar" style="height:10px"><div class="mini-bar-fill" id="saveBar" style="width:0%;background:var(--success)"></div></div>
+    <div style="font-size:11px;color:var(--text-light);margin-top:6px">已完成 <span id="savePct">0%</span>，继续加油 💪</div>
   </div>
 
-  <div class="section-label">📊 本月支出分类</div>
-  <div class="card" style="padding:0">
-    <div class="list-item"><div class="li-icon" style="background:#FFF7E6">🍜</div><div class="li-info"><div class="li-title">餐饮</div><div class="li-sub">12 笔</div></div><div class="li-extra" style="font-weight:600">¥1,280</div></div>
-    <div class="list-item"><div class="li-icon" style="background:#E6F7FF">🚌</div><div class="li-info"><div class="li-title">交通</div><div class="li-sub">8 笔</div></div><div class="li-extra" style="font-weight:600">¥420</div></div>
-    <div class="list-item"><div class="li-icon" style="background:#F9F0FF">🛍️</div><div class="li-info"><div class="li-title">购物</div><div class="li-sub">3 笔</div></div><div class="li-extra" style="font-weight:600">¥980</div></div>
-    <div class="list-item"><div class="li-icon" style="background:#F6FFED">🎬</div><div class="li-info"><div class="li-title">娱乐</div><div class="li-sub">5 笔</div></div><div class="li-extra" style="font-weight:600">¥520</div></div>
+  <div class="section-label">🔎 账单筛选</div>
+  <div class="card filter-bar">
+    <select id="moneyYear" onchange="renderMoney()"></select>
+    <select id="moneyMonth" onchange="renderMoney()"></select>
+    <select id="moneyType" onchange="renderMoney()">
+      <option value="all">全部类型</option><option value="expense">仅支出</option><option value="income">仅收入</option>
+    </select>
+    <input type="text" id="moneySearch" placeholder="搜索备注/分类" oninput="renderMoney()">
   </div>
+
+  <div class="section-label">📊 支出分类（点击查看每笔明细）</div>
+  <div class="card" style="padding:0" id="moneyCats"></div>
+
+  <div class="section-label">🧾 收支明细 <span id="moneyListCount" style="font-weight:400;color:var(--text-light)"></span></div>
+  <div class="card" style="padding:0" id="moneyList"></div>
 
   <div class="section-label">✏️ 记一笔</div>
   <div class="card visit-form">
     <div class="form-row">
-      <div class="form-group"><label>金额（元）</label><input type="number" placeholder="0.00"></div>
-      <div class="form-group"><label>类型</label><select><option>支出</option><option>收入</option><option>转账</option></select></div>
+      <div class="form-group"><label>金额（元）</label><input type="number" id="expAmount" placeholder="0.00"></div>
+      <div class="form-group"><label>类型</label><select id="expType"><option value="expense">支出</option><option value="income">收入</option></select></div>
     </div>
-    <div class="form-group"><label>分类</label><select><option>餐饮</option><option>交通</option><option>购物</option><option>娱乐</option><option>居住</option><option>其他</option></select></div>
-    <div class="form-group"><label>备注（选填）</label><input type="text" placeholder="如：午饭"></div>
-    <div class="form-group"><label>日期</label><input type="date" value="2026-08-03"></div>
-    <button class="btn-primary" style="width:100%">保存</button>
+    <div class="form-group"><label>分类</label><select id="expCat"><option>餐饮</option><option>交通</option><option>购物</option><option>娱乐</option><option>居住</option><option>借款</option><option>支援</option><option>医疗</option><option>存钱</option><option>工资</option><option>佣金</option><option>其他</option></select></div>
+    <div class="form-group"><label>备注（选填）</label><input type="text" id="expNote" placeholder="如：午饭 / 借给李哥"></div>
+    <div class="form-group"><label>日期</label><input type="date" id="expDate"></div>
+    <button class="btn-primary" style="width:100%" onclick="saveExpense()">保存</button>
   </div>
+  <div class="wb-modal" id="catModal"></div>
+  <div class="wb-modal" id="txnModal"></div>
 </div>
 
 <!-- ========== 娱乐 HUB ========== -->
@@ -1806,30 +1796,32 @@ body {
       <button class="cat-tab" onclick="funFilter(this,'游戏')">🎮 游戏</button>
       <button class="cat-tab" onclick="funFilter(this,'活动')">🎡 活动</button>
     </div>
-    <div class="section-label">🎯 我的娱乐清单</div>
-    <div class="card" style="padding:0" id="funList">
-      <div class="list-item" data-cat="电影"><div class="li-icon" style="background:#E6F7FF">🎬</div><div class="li-info"><div class="li-title">《奥本海默》</div><div class="li-sub">想看 · 豆瓣 8.9</div></div><div class="li-check" onclick="toggleFun(this)">✓</div></div>
-      <div class="list-item" data-cat="剧集"><div class="li-icon" style="background:#F9F0FF">📺</div><div class="li-info"><div class="li-title">《繁花》</div><div class="li-sub">在看 · 第 8 集</div></div><div class="li-check" onclick="toggleFun(this)">✓</div></div>
-      <div class="list-item" data-cat="游戏"><div class="li-icon" style="background:#F6FFED">🎮</div><div class="li-info"><div class="li-title">《塞尔达传说》</div><div class="li-sub">想玩 · 待通关</div></div><div class="li-check" onclick="toggleFun(this)">✓</div></div>
-      <div class="list-item" data-cat="活动"><div class="li-icon" style="background:#FFF7E6">🎡</div><div class="li-info"><div class="li-title">周末周边游</div><div class="li-sub">计划 · 本周六</div></div><div class="li-check" onclick="toggleFun(this)">✓</div></div>
-      <div class="list-item" data-cat="电影"><div class="li-icon" style="background:#E6F7FF">🎬</div><div class="li-info"><div class="li-title">《周处除三害》</div><div class="li-sub">想看 · 豆瓣 8.1</div></div><div class="li-check" onclick="toggleFun(this)">✓</div></div>
+    <div class="card filter-bar">
+      <select id="funYear" onchange="renderFun()"></select>
+      <select id="funMonth" onchange="renderFun()"></select>
+      <input type="text" id="funSearch" placeholder="搜索项目名称/备注" oninput="renderFun()">
     </div>
+    <div class="section-label">🎯 我的娱乐清单</div>
+    <div class="card" style="padding:0" id="funList"></div>
     <div class="section-label">✏️ 添加想做的事</div>
     <div class="card visit-form">
       <div class="form-row">
-        <div class="form-group"><label>名称</label><input type="text" placeholder="如：看一场电影"></div>
-        <div class="form-group"><label>类型</label><select><option>电影</option><option>剧集</option><option>游戏</option><option>活动</option></select></div>
+        <div class="form-group"><label>名称</label><input type="text" id="funName" placeholder="如：看一场电影"></div>
+        <div class="form-group"><label>类型</label><select id="funCat"><option>电影</option><option>剧集</option><option>游戏</option><option>活动</option></select></div>
       </div>
-      <div class="form-group"><label>备注（选填）</label><input type="text" placeholder="如：和朋友一起"></div>
-      <button class="btn-primary" style="width:100%">添加</button>
+      <div class="form-row">
+        <div class="form-group"><label>日期</label><input type="date" id="funDate"></div>
+        <div class="form-group"><label>备注（选填）</label><input type="text" id="funNote" placeholder="如：和朋友一起"></div>
+      </div>
+      <button class="btn-primary" style="width:100%" onclick="addFun()">添加</button>
     </div>
     <div class="section-label">📊 娱乐统计</div>
     <div class="card">
       <div class="study-stats">
-        <div class="ss-item"><div class="ss-num purple">5</div><div class="ss-label">清单总数</div></div>
-        <div class="ss-item"><div class="ss-num green">2</div><div class="ss-label">已完成</div></div>
-        <div class="ss-item"><div class="ss-num orange">3</div><div class="ss-label">计划中</div></div>
-        <div class="ss-item"><div class="ss-num blue">4</div><div class="ss-label">本周(次)</div></div>
+        <div class="ss-item"><div class="ss-num purple" id="funTotal">0</div><div class="ss-label">清单总数</div></div>
+        <div class="ss-item"><div class="ss-num green" id="funDone">0</div><div class="ss-label">已完成</div></div>
+        <div class="ss-item"><div class="ss-num orange" id="funPlan">0</div><div class="ss-label">计划中</div></div>
+        <div class="ss-item"><div class="ss-num blue" id="funShow">0</div><div class="ss-label">当前筛选</div></div>
       </div>
     </div>
   </div>
@@ -1837,28 +1829,30 @@ body {
   <!-- 旅行计划 -->
   <div class="subtab-content" id="fn-travel">
     <div class="client-summary">
-      <div class="cs-item"><div class="cs-num" style="color:var(--primary)">3</div><div class="cs-label">想去(个)</div></div>
-      <div class="cs-item"><div class="cs-num" style="color:var(--success)">1</div><div class="cs-label">已出发</div></div>
-      <div class="cs-item"><div class="cs-num" style="color:var(--warning)">¥12K</div><div class="cs-label">预算</div></div>
+      <div class="cs-item"><div class="cs-num" style="color:var(--primary)" id="tvPlan">0</div><div class="cs-label">想去(个)</div></div>
+      <div class="cs-item"><div class="cs-num" style="color:var(--success)" id="tvDone">0</div><div class="cs-label">已出发</div></div>
+      <div class="cs-item"><div class="cs-num" style="color:var(--warning)" id="tvBudget">¥0</div><div class="cs-label">预算</div></div>
+    </div>
+    <div class="card filter-bar">
+      <select id="tvYear" onchange="renderTravel()"></select>
+      <select id="tvMonth" onchange="renderTravel()"></select>
+      <select id="tvStatus" onchange="renderTravel()"><option value="all">全部状态</option><option>计划中</option><option>已出发</option><option>已完成</option></select>
+      <input type="text" id="tvSearch" placeholder="搜索目的地/备注" oninput="renderTravel()">
     </div>
     <div class="section-label">🗺️ 旅行清单</div>
-    <div class="card" style="padding:0">
-      <div class="list-item"><div class="li-icon" style="background:#E6F7FF">🏝️</div><div class="li-info"><div class="li-title">三亚海岛游</div><div class="li-sub">计划 10月 · 预算 ¥8,000</div></div><div class="li-extra" style="color:var(--primary);font-weight:600">计划中</div></div>
-      <div class="list-item"><div class="li-icon" style="background:#F6FFED">⛰️</div><div class="li-info"><div class="li-title">云南大理丽江</div><div class="li-sub">计划 春节 · 预算 ¥6,000</div></div><div class="li-extra" style="color:var(--primary);font-weight:600">计划中</div></div>
-      <div class="list-item"><div class="li-icon" style="background:#FFF7E6">🗼</div><div class="li-info"><div class="li-title">日本东京</div><div class="li-sub">已出发 7月 · 花费 ¥12,000</div></div><div class="li-extra" style="color:var(--success);font-weight:600">已完成</div></div>
-    </div>
+    <div class="card" style="padding:0" id="travelList"></div>
     <div class="section-label">✏️ 添加旅行计划</div>
     <div class="card visit-form">
       <div class="form-row">
-        <div class="form-group"><label>目的地</label><input type="text" placeholder="如：三亚"></div>
-        <div class="form-group"><label>计划时间</label><input type="text" placeholder="如：10月"></div>
+        <div class="form-group"><label>目的地</label><input type="text" id="tvName" placeholder="如：三亚"></div>
+        <div class="form-group"><label>出发日期</label><input type="date" id="tvDate"></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>预算(元)</label><input type="number" placeholder="如 8000"></div>
-        <div class="form-group"><label>状态</label><select><option>计划中</option><option>已出发</option><option>已完成</option></select></div>
+        <div class="form-group"><label>预算(元)</label><input type="number" id="tvBudgetIn" placeholder="如 8000"></div>
+        <div class="form-group"><label>状态</label><select id="tvStatusIn"><option>计划中</option><option>已出发</option><option>已完成</option></select></div>
       </div>
-      <div class="form-group"><label>备注（选填）</label><input type="text" placeholder="如：和家一起"></div>
-      <button class="btn-primary" style="width:100%">添加</button>
+      <div class="form-group"><label>备注（选填）</label><input type="text" id="tvNote" placeholder="如：和家人一起"></div>
+      <button class="btn-primary" style="width:100%" onclick="addTravel()">添加</button>
     </div>
   </div>
 
@@ -1931,6 +1925,50 @@ body {
 
 </div>
 
+<style id="dynStyle">
+/* ===== 共享：整月日历 / 弹窗 / 列表 ===== */
+.month-cal{ margin-top:4px; }
+.mc-nav{ display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.mc-btn{ width:32px;height:32px;border:none;border-radius:50%;background:#f0f2f7;color:var(--text-primary);font-size:18px;line-height:1;cursor:pointer; }
+.mc-btn:active{ background:#e2e6ee; }
+.mc-title{ font-size:14px;font-weight:600; }
+.mc-heads,.mc-cells{ display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+.mc-heads span{ text-align:center; font-size:12px; color:var(--text-light); padding:4px 0; }
+.mc-cell{ text-align:center; padding:7px 0; font-size:13px; border-radius:8px; color:var(--text-secondary); position:relative; }
+.mc-cell.empty{ visibility:hidden; }
+.mc-cell.on{ background:var(--primary); color:#fff; font-weight:600; }
+.mc-cell.today{ box-shadow:0 0 0 2px var(--primary) inset; }
+.mc-cell.has{ background:#E6F7FF; color:var(--primary); font-weight:600; cursor:pointer; }
+.mc-cell.has.on{ background:var(--primary); color:#fff; }
+.mc-cell.link{ cursor:pointer; }
+/* 弹窗 */
+.modal,.wb-modal{ position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:1000; padding:16px; }
+.modal-card{ background:#fff; border-radius:16px; padding:18px; width:100%; max-width:420px; max-height:84vh; overflow:auto; }
+.modal-title{ font-size:16px; font-weight:700; margin-bottom:6px; }
+.modal-row{ display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px dashed var(--border); font-size:14px; }
+.modal-row:last-child{ border-bottom:none; }
+.modal-row .k{ color:var(--text-light); }
+.modal-row .v{ font-weight:600; }
+/* 列表行统一删除键 */
+.li-del{ color:var(--text-light); cursor:pointer; font-size:16px; padding:4px 6px; flex-shrink:0; }
+.li-del:active{ color:#ff4d4f; }
+.filter-select{ padding:8px 10px;border:1px solid var(--border);border-radius:10px;font-size:13px;background:#fff;color:var(--text-primary);outline:none; }
+.filter-input{ flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:10px;font-size:13px;outline:none; }
+.filter-bar{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; align-items:center; }
+.filter-bar select{ padding:8px 10px;border:1px solid var(--border);border-radius:10px;font-size:13px;background:#fff;color:var(--text-primary);outline:none; }
+.filter-bar input[type="text"]{ flex:1;min-width:120px;padding:8px 12px;border:1px solid var(--border);border-radius:10px;font-size:13px;outline:none; }
+.txn-row{ display:flex;align-items:center;gap:10px;padding:11px 12px;border-bottom:1px solid #F5F5F5;cursor:pointer; }
+.txn-row:last-child{ border-bottom:none; }
+.txn-amt{ font-weight:700;font-size:14px;white-space:nowrap; }
+.txn-amt.out{ color:var(--text-primary); }
+.txn-amt.in{ color:var(--success); }
+.chip{ padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:#fff;font-size:13px;cursor:pointer;color:var(--text-secondary); }
+.chip.active{ background:var(--primary);color:#fff;border-color:var(--primary); }
+.status-tag{ font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600; }
+.status-plan{ background:#E6F7FF;color:#1677ff; }
+.status-doing{ background:#FFF7E6;color:#FA8C16; }
+.status-done{ background:#E6F7EE;color:#1a7f4b; }
+</style>
 <script>
 // Page switching
 function switchPage(pageId) {
@@ -1944,6 +1982,7 @@ function switchPage(pageId) {
   if(mn) mn.classList.add('active');
   // close sidebar on mobile after nav
   closeSidebar();
+  renderPerformance();   // 切页时刷新业绩统计（待办数等可能变化）
   window.scrollTo(0, 0);
 }
 
@@ -2058,16 +2097,7 @@ function clientFilterType(btn, type) {
   document.getElementById('clientEmpty').hidden = visible > 0;
 }
 
-// Fun filter
-function funFilter(btn, cat) {
-  btn.parentElement.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('#funList .list-item').forEach(item => {
-    const c = item.getAttribute('data-cat');
-    item.style.display = (cat === '全部' || c === cat) ? '' : 'none';
-  });
-}
-function toggleFun(el) { el.classList.toggle('checked'); }
+// Fun filter / toggle 已由下方动态数据层统一实现（见「娱乐」章节）
 
 // ===== Drawing canvas (画画) =====
 let drawCtx, drawPainting = false, drawColor = '#1a1a1a', drawSize = 5;
@@ -2075,6 +2105,7 @@ function initCanvas() {
   const canvas = document.getElementById('drawCanvas');
   if (!canvas) return;
   drawCtx = canvas.getContext('2d');
+  if (!drawCtx) return; // 环境不支持 canvas（如测试沙箱）时直接跳过，避免中断启动
   if (canvas.dataset.bound) return;
   canvas.dataset.bound = '1';
   drawCtx.lineCap = 'round';
@@ -2494,16 +2525,12 @@ function renderEngCheck(){
   const greet=document.getElementById('chkGreeting'); if(greet) greet.textContent='🔥 连续打卡 '+streak+' 天';
   const heat=document.getElementById('chkHeat');
   if(heat){
-    const heads=['一','二','三','四','五','六','日'];
-    let html=heads.map(h=>'<div class="heat-day head">'+h+'</div>').join('');
-    const ds=new Set(engState.studyDates);
-    const t=new Date(); t.setDate(t.getDate()-13);
-    for(let i=0;i<14;i++){
-      const k=engDateKey(t);
-      html+='<div class="heat-day '+(ds.has(k)?'lv3':'')+'">'+t.getDate()+'</div>';
-      t.setDate(t.getDate()+1);
-    }
-    heat.innerHTML=html;
+    // engDateKey 为 2026-8-4 未补零格式，统一补零后再喂给月历
+    const pad=(engState.studyDates||[]).map(function(s){
+      const p=String(s).split('-'); if(p.length!==3) return s;
+      return p[0]+'-'+String(p[1]).padStart(2,'0')+'-'+String(p[2]).padStart(2,'0');
+    });
+    paintCal('chkHeat','eng', new Set(pad));
   }
 }
 function saveCheckIn(){
@@ -2546,7 +2573,7 @@ document.getElementById('mainContent').addEventListener('click', function(e) {
 /* ===================== 多账户 / 分账户存档 ===================== */
 const WB_MAIN = document.getElementById('mainContent');
 const WB_DEFAULT = WB_MAIN.innerHTML;          // 初始演示数据（新账户基线）
-const WB_VERSION = 14;                          // 结构版本：改 HTML 结构后递增，旧快照自动失效
+const WB_VERSION = 15;                          // 结构版本：改 HTML 结构后递增，旧快照自动失效
 let WB_SESSION = localStorage.getItem('wb_session') || '';
 let WB_MODE = 'login';
 
@@ -2603,6 +2630,605 @@ function wbSyncSidebar(){
     s.classList.toggle('active', s.getAttribute('data-page')===pid);
   });
 }
+/* ================== 统一生活数据层（待办/娱乐/记账/作息/健身 全部动态） ================== */
+function _dkey(p){ return 'wb_'+p+'_'+(WB_SESSION||'guest'); }
+function _load(p,def){ try{ var r=localStorage.getItem(_dkey(p)); return r?JSON.parse(r):def; }catch(e){ return def; } }
+function _save(p,v){ if(!WB_SESSION) return; try{ localStorage.setItem(_dkey(p), JSON.stringify(v)); }catch(e){} }
+function _uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function _today(){ return new Date().toISOString().slice(0,10); }
+function _ymd(y,m,d){ return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'); }
+function _monthKey(d){ return d.slice(0,7); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function setText(id,v){ var e=document.getElementById(id); if(e) e.textContent=v; }
+function setHTML(id,v){ var e=document.getElementById(id); if(e) e.innerHTML=v; }
+function catColor(cat){
+  var m={ '客户跟进':'background:#E6F7FF;color:#1890FF', '保单办理':'background:#F6FFED;color:#52C41A', '保函业务':'background:#FFF7E6;color:#FA8C16', '学习提升':'background:#F9F0FF;color:#722ED1', '行政事务':'background:#F0F5FF;color:#2F54EB', '佣金待结算':'background:#FFF1F0;color:#FF4D4F', '生活':'background:#F5F5F5;color:#666' };
+  return m[cat]||m['生活'];
+}
+function funEmoji(cat){ return ({'电影':'🎬','剧集':'📺','游戏':'🎮','活动':'🎡','餐饮':'🍜','交通':'🚌','购物':'🛍️','娱乐':'🎬','居住':'🏠','借款':'🤝','支援':'❤️','医疗':'💊','存钱':'🏦','工资':'💵','佣金':'💼','其他':'📦'})[cat]||'🎯'; }
+function funIcon(cat){ var m={'电影':'background:#E6F7FF','剧集':'background:#F9F0FF','游戏':'background:#F6FFED','活动':'background:#FFF7E6','餐饮':'background:#FFF7E6','交通':'background:#E6F7FF','购物':'background:#F9F0FF','娱乐':'background:#F6FFED','居住':'background:#F0F5FF','借款':'background:#FFF1F0','支援':'background:#FFF0F6','医疗':'background:#E6FFFB','存钱':'background:#F6FFED','工资':'background:#E6F7FF','佣金':'background:#FFF7E6'}; return m[cat]||'background:#F5F5F5'; }
+/* 年/月下拉：填充选项并保持已选值（本次会话内记忆用户选择） */
+var _ymInit={};
+function fillYM(yearId,monthId,dates,defaultAll){
+  var now=new Date();
+  var ys=document.getElementById(yearId), ms=document.getElementById(monthId);
+  if(ys){
+    var set={}; (dates||[]).forEach(function(d){ if(d) set[String(d).slice(0,4)]=1; });
+    for(var y=now.getFullYear()-3;y<=now.getFullYear()+2;y++) set[y]=1;
+    var years=Object.keys(set).sort();
+    var want='<option value="all">全部年份</option>'+years.map(function(y){return '<option value="'+y+'">'+y+'年</option>';}).join('');
+    var first=!_ymInit[yearId];
+    var cur=first?(defaultAll?'all':String(now.getFullYear())):ys.value;
+    if(ys.innerHTML!==want) ys.innerHTML=want;
+    ys.value=(cur==='all'||years.indexOf(cur)>=0)?cur:String(now.getFullYear());
+    _ymInit[yearId]=1;
+  }
+  if(ms){
+    var h='<option value="all">全部月份</option>';
+    for(var i=1;i<=12;i++) h+='<option value="'+String(i).padStart(2,'0')+'">'+i+'月</option>';
+    var mFirst=!_ymInit[monthId];
+    var mCur=mFirst?(defaultAll?'all':String(now.getMonth()+1).padStart(2,'0')):ms.value;
+    if(ms.innerHTML!==h) ms.innerHTML=h;
+    ms.value=mCur||'all';
+    _ymInit[monthId]=1;
+  }
+}
+function ymMatch(date,yearId,monthId){
+  var ys=document.getElementById(yearId), ms=document.getElementById(monthId);
+  var y=ys?ys.value:'all', m=ms?ms.value:'all';
+  if(!date) return (y==='all'&&m==='all');
+  if(y!=='all' && date.slice(0,4)!==y) return false;
+  if(m!=='all' && date.slice(5,7)!==m) return false;
+  return true;
+}
+function setDateDefault(id){ var e=document.getElementById(id); if(e && !e.value) e.value=_today(); }
+
+/* ---------- 待办 ---------- */
+function getTodos(){ var a=_load('todo',null); if(a===null){ a=_migrateTodos(); _save('todo',a); } return Array.isArray(a)?a:[]; }
+function _migrateTodos(){
+  var out=[]; _qa('#todoList .todo-item').forEach(function(el){
+    out.push({ id:_uid(), text:(el.querySelector('.todo-text')||{}).textContent||'', cat:el.getAttribute('data-cat')||'生活', date:(el.querySelector('.todo-meta')||{}).textContent||_today(), done: el.getAttribute('data-done')==='true' });
+  });
+  if(out.length===0){
+    out.push({id:_uid(),text:'联系张总确认企财险续保方案',cat:'客户跟进',date:'2026-08-03',done:false});
+    out.push({id:_uid(),text:'准备中建三局投标保函材料',cat:'保函业务',date:'2026-08-03',done:false});
+    out.push({id:_uid(),text:'研读建工险附加条款',cat:'学习提升',date:'2026-08-02',done:true});
+    out.push({id:_uid(),text:'提交华为企财险投保资料',cat:'保单办理',date:'2026-08-02',done:true});
+    out.push({id:_uid(),text:'核对 7 月佣金明细，提交流水结算申请',cat:'佣金待结算',date:'2026-08-05',done:false});
+  }
+  return out;
+}
+function saveTodos(a){ _save('todo',a); }
+function applyTodoFilter(){
+  _qa('#todoList .todo-item').forEach(function(item){
+    var c=item.getAttribute('data-cat'); var done=item.getAttribute('data-done')==='true';
+    var catOk=(currentTodoCat==='全部'||c===currentTodoCat);
+    var statusOk=(currentTodoStatus==='all'||(currentTodoStatus==='done'&&done)||(currentTodoStatus==='pending'&&!done));
+    item.style.display=(catOk&&statusOk)?'':'none';
+  });
+}
+function renderTodo(){
+  var list=getTodos(); var box=document.getElementById('todoList'); if(!box) return;
+  box.innerHTML = list.map(function(t){
+    return '<div class="todo-item" data-id="'+t.id+'" data-cat="'+esc(t.cat)+'" data-done="'+(t.done?'true':'false')+'">'+
+      '<div class="todo-check'+(t.done?' checked':'')+'" onclick="toggleTodo(this)">✓</div>'+
+      '<div class="todo-content"><div class="todo-text"'+(t.done?' style="text-decoration:line-through;color:var(--text-light)"':'')+'>'+esc(t.text)+'</div><div class="todo-meta">'+esc(t.date)+'</div></div>'+
+      '<span class="todo-cat-tag" style="'+catColor(t.cat)+'">'+esc(t.cat)+'</span>'+
+      '<span class="todo-delete" onclick="deleteTodo(this)">🗑</span></div>';
+  }).join('') || '<p style="text-align:center;color:var(--text-light);font-size:12px;padding:18px">还没有待办，上面添加一条吧 📝</p>';
+  applyTodoFilter();
+  var done=list.filter(function(t){return t.done;}).length;
+  setText('todoSummary', done+'/'+list.length+' 完成');
+  setText('homeTodo', list.filter(function(t){return !t.done;}).length);
+}
+function addTodo(){
+  var input=document.getElementById('todoInput'); var text=(input&&input.value||'').trim(); if(!text){ return; }
+  var cat=document.getElementById('todoCat').value;
+  var list=getTodos(); list.unshift({id:_uid(),text:text,cat:cat,date:_today(),done:false});
+  saveTodos(list); renderTodo(); if(input) input.value='';
+}
+function toggleTodo(el){
+  var item=el.closest('.todo-item'); var id=item.getAttribute('data-id');
+  var list=getTodos(); var t=list.find(function(x){return x.id===id;}); if(!t) return;
+  t.done=!t.done; saveTodos(list); renderTodo();
+}
+function deleteTodo(el){
+  var item=(typeof el==='string')?document.querySelector('.todo-item[data-id="'+el+'"]'):el.closest('.todo-item');
+  if(!item) return; var id=item.getAttribute('data-id');
+  var list=getTodos().filter(function(x){return x.id!==id;}); saveTodos(list); renderTodo();
+}
+
+/* ---------- 娱乐 ---------- */
+function getFun(){ var a=_load('fun',null); if(a===null){ a=_migrateFun(); _save('fun',a);} return Array.isArray(a)?a:[]; }
+function _migrateFun(){
+  var out=[]; _qa('#funList .list-item').forEach(function(el){
+    out.push({ id:_uid(), text:(el.querySelector('.li-title')||{}).textContent||'', cat:el.getAttribute('data-cat')||'电影', status:(el.querySelector('.li-check')&&el.querySelector('.li-check').classList.contains('checked'))?'done':'todo', note:(el.querySelector('.li-sub')||{}).textContent||'' });
+  });
+  if(out.length===0){
+    var t=_today(), mk=t.slice(0,8);
+    out.push({id:_uid(),text:'《奥本海默》',cat:'电影',status:'todo',note:'想看 · 豆瓣 8.9',date:mk+'05'});
+    out.push({id:_uid(),text:'《繁花》',cat:'剧集',status:'done',note:'在看 · 第 8 集',date:mk+'02'});
+    out.push({id:_uid(),text:'《塞尔达传说》',cat:'游戏',status:'todo',note:'想玩 · 待通关',date:mk+'10'});
+    out.push({id:_uid(),text:'周末周边游',cat:'活动',status:'done',note:'计划 · 本周六',date:mk+'08'});
+    out.push({id:_uid(),text:'《周处除三害》',cat:'电影',status:'todo',note:'想看 · 豆瓣 8.1',date:mk+'15'});
+  }
+  out.forEach(function(o){ if(!o.date) o.date=_today(); });
+  return out;
+}
+function saveFun(a){ _save('fun',a); }
+var currentFunCat='全部';
+function renderFun(){
+  var list=getFun(); var box=document.getElementById('funList'); if(!box) return;
+  fillYM('funYear','funMonth', list.map(function(x){return x.date;}), true);  // 娱乐是心愿清单，默认不限年月
+  var kw=((document.getElementById('funSearch')||{}).value||'').trim().toLowerCase();
+  var fl = list.filter(function(x){
+    if(currentFunCat!=='全部' && x.cat!==currentFunCat) return false;
+    if(!ymMatch(x.date||'','funYear','funMonth')) return false;
+    if(kw && (x.text+' '+(x.note||'')).toLowerCase().indexOf(kw)<0) return false;
+    return true;
+  });
+  box.innerHTML = fl.map(function(f){
+    return '<div class="list-item" data-cat="'+esc(f.cat)+'">'+
+      '<div class="li-icon" style="'+funIcon(f.cat)+'">'+funEmoji(f.cat)+'</div>'+
+      '<div class="li-info"><div class="li-title">'+esc(f.text)+'</div><div class="li-sub">'+esc(f.date||'')+(f.note?' · '+esc(f.note):'')+'</div></div>'+
+      '<div class="li-check'+(f.status==='done'?' checked':'')+'" onclick="toggleFun(\''+f.id+'\')">✓</div>'+
+      '<span class="li-del" onclick="deleteFun(\''+f.id+'\')">🗑</span></div>';
+  }).join('') || '<div class="empty-state"><div class="icon">🎯</div><p>当前筛选下没有内容</p></div>';
+  var total=list.length, done=list.filter(function(x){return x.status==='done';}).length;
+  setText('funTotal', total); setText('funDone', done); setText('funPlan', total-done); setText('funShow', fl.length);
+}
+function addFun(){
+  var nameI=document.getElementById('funName'); var name=(nameI&&nameI.value||'').trim(); if(!name){ toast('请输入名称'); return; }
+  var cat=document.getElementById('funCat').value;
+  var noteI=document.getElementById('funNote'); var note=(noteI&&noteI.value||'').trim();
+  var date=(document.getElementById('funDate')&&document.getElementById('funDate').value)||_today();
+  var list=getFun(); list.unshift({id:_uid(),text:name,cat:cat,status:'todo',note:note,date:date}); saveFun(list); renderFun();
+  if(nameI) nameI.value=''; if(noteI) noteI.value=''; toast('已添加');
+}
+function toggleFun(id){
+  var list=getFun(); var f=list.find(function(x){return x.id===id;}); if(!f) return;
+  f.status = f.status==='done'?'todo':'done'; saveFun(list); renderFun();
+}
+function funFilter(btn,cat){
+  _qa(btn.parentElement.querySelectorAll('.cat-tab')).forEach(function(t){t.classList.remove('active');});
+  btn.classList.add('active'); currentFunCat=cat; renderFun();
+}
+function deleteFun(id){
+  var list=getFun().filter(function(x){return x.id!==id;}); saveFun(list); renderFun(); toast('已删除');
+}
+
+/* ---------- 旅行清单 ---------- */
+function getTravel(){
+  var a=_load('travel',null);
+  if(a===null){
+    var y=new Date().getFullYear();
+    a=[ {id:_uid(),name:'三亚海岛游',date:y+'-10-01',budget:8000,status:'计划中',note:'和家人一起'},
+        {id:_uid(),name:'云南大理丽江',date:(y+1)+'-02-10',budget:6000,status:'计划中',note:'春节假期'},
+        {id:_uid(),name:'日本东京',date:y+'-07-12',budget:12000,status:'已完成',note:'已出发 · 花费 ¥12,000'} ];
+    _save('travel',a);
+  }
+  return Array.isArray(a)?a:[];
+}
+function saveTravel(a){ _save('travel',a); }
+function travelEmoji(n){ if(/海|岛|三亚|beach/i.test(n)) return '🏝️'; if(/山|云南|大理|丽江/.test(n)) return '⛰️'; if(/日本|东京|京都/.test(n)) return '🗼'; return '🧳'; }
+function statusTag(s){ var c=s==='已完成'?'status-done':(s==='已出发'?'status-doing':'status-plan'); return '<span class="status-tag '+c+'">'+esc(s)+'</span>'; }
+function renderTravel(){
+  var list=getTravel(); var box=document.getElementById('travelList'); if(!box) return;
+  fillYM('tvYear','tvMonth', list.map(function(x){return x.date;}), true);  // 旅行计划多为未来，默认不限年月
+  var st=((document.getElementById('tvStatus')||{}).value)||'all';
+  var kw=((document.getElementById('tvSearch')||{}).value||'').trim().toLowerCase();
+  var fl=list.filter(function(x){
+    if(st!=='all' && x.status!==st) return false;
+    if(!ymMatch(x.date||'','tvYear','tvMonth')) return false;
+    if(kw && (x.name+' '+(x.note||'')).toLowerCase().indexOf(kw)<0) return false;
+    return true;
+  });
+  box.innerHTML = fl.map(function(t){
+    return '<div class="list-item">'+
+      '<div class="li-icon" style="background:#E6F7FF">'+travelEmoji(t.name)+'</div>'+
+      '<div class="li-info"><div class="li-title">'+esc(t.name)+'</div><div class="li-sub">'+esc(t.date||'待定')+' · 预算 ¥'+(+t.budget||0).toLocaleString()+(t.note?' · '+esc(t.note):'')+'</div></div>'+
+      '<div onclick="cycleTravel(\''+t.id+'\')" style="cursor:pointer">'+statusTag(t.status)+'</div>'+
+      '<span class="li-del" onclick="deleteTravel(\''+t.id+'\')">🗑</span></div>';
+  }).join('') || '<div class="empty-state"><div class="icon">🗺️</div><p>当前筛选下没有旅行计划</p></div>';
+  setText('tvPlan', list.filter(function(x){return x.status==='计划中';}).length);
+  setText('tvDone', list.filter(function(x){return x.status!=='计划中';}).length);
+  var bud=fl.reduce(function(s,x){return s+(+x.budget||0);},0);
+  setText('tvBudget', bud>=10000? '¥'+(bud/10000).toFixed(1)+'万' : '¥'+bud.toLocaleString());
+}
+function addTravel(){
+  var n=(document.getElementById('tvName')&&document.getElementById('tvName').value||'').trim();
+  if(!n){ toast('请输入目的地'); return; }
+  var list=getTravel();
+  list.unshift({ id:_uid(), name:n,
+    date:(document.getElementById('tvDate')&&document.getElementById('tvDate').value)||_today(),
+    budget:parseFloat((document.getElementById('tvBudgetIn')||{}).value)||0,
+    status:(document.getElementById('tvStatusIn')||{}).value||'计划中',
+    note:(document.getElementById('tvNote')&&document.getElementById('tvNote').value||'').trim() });
+  saveTravel(list); renderTravel();
+  var ni=document.getElementById('tvName'); if(ni) ni.value='';
+  var no=document.getElementById('tvNote'); if(no) no.value='';
+  var bi=document.getElementById('tvBudgetIn'); if(bi) bi.value='';
+  toast('已添加');
+}
+function deleteTravel(id){ saveTravel(getTravel().filter(function(x){return x.id!==id;})); renderTravel(); toast('已删除'); }
+function cycleTravel(id){
+  var order=['计划中','已出发','已完成']; var list=getTravel();
+  var t=list.find(function(x){return x.id===id;}); if(!t) return;
+  t.status=order[(order.indexOf(t.status)+1)%3]; saveTravel(list); renderTravel();
+}
+
+/* ---------- 记账 ---------- */
+function getMoney(){ var m=_load('money',null); if(m===null){ m=_seedMoney(); _save('money',m);} return m; }
+function _seedMoney(){
+  var mk=_today().slice(0,8);   // 当月，保证默认筛选下有数据
+  var d=function(n){ return mk+String(n).padStart(2,'0'); };
+  return { saveGoal:50000, saved:8000, transactions:[
+    {id:_uid(),type:'expense',cat:'餐饮',amount:38,note:'午饭',date:d(3)},
+    {id:_uid(),type:'expense',cat:'餐饮',amount:52,note:'晚饭',date:d(2)},
+    {id:_uid(),type:'expense',cat:'餐饮',amount:30,note:'早餐',date:d(1)},
+    {id:_uid(),type:'expense',cat:'交通',amount:20,note:'地铁',date:d(3)},
+    {id:_uid(),type:'expense',cat:'交通',amount:15,note:'公交',date:d(2)},
+    {id:_uid(),type:'expense',cat:'购物',amount:299,note:'T恤',date:d(2)},
+    {id:_uid(),type:'expense',cat:'娱乐',amount:88,note:'电影票',date:d(1)},
+    {id:_uid(),type:'expense',cat:'借款',amount:2000,note:'借给李哥周转',date:d(2)},
+    {id:_uid(),type:'expense',cat:'支援',amount:1500,note:'给父母生活费',date:d(1)},
+    {id:_uid(),type:'income',cat:'工资',amount:12000,note:'本月薪资',date:d(1)},
+    {id:_uid(),type:'income',cat:'佣金',amount:3200,note:'保单佣金',date:d(3)}
+  ]};
+}
+function saveMoney(m){ _save('money',m); }
+function moneyAgg(m){
+  var cur=_monthKey(_today());
+  var exp=0, inc=0, expCur=0, incCur=0;
+  var byCat={};
+  m.transactions.forEach(function(t){
+    var amt=+t.amount||0;
+    if(t.type==='expense'){ exp+=amt; if(_monthKey(t.date)===cur) expCur+=amt; (byCat[t.cat]=byCat[t.cat]||{n:0,sum:0}); byCat[t.cat].n++; byCat[t.cat].sum+=amt; }
+    else if(t.type==='income'){ inc+=amt; if(_monthKey(t.date)===cur) incCur+=amt; }
+  });
+  return {exp:exp, inc:inc, expCur:expCur, incCur:incCur, byCat:byCat};
+}
+/* 按当前筛选条件过滤交易 */
+function moneyFiltered(m){
+  var type=((document.getElementById('moneyType')||{}).value)||'all';
+  var kw=((document.getElementById('moneySearch')||{}).value||'').trim().toLowerCase();
+  return m.transactions.filter(function(t){
+    if(!ymMatch(t.date||'','moneyYear','moneyMonth')) return false;
+    if(type!=='all' && t.type!==type) return false;
+    if(kw && ((t.note||'')+' '+(t.cat||'')).toLowerCase().indexOf(kw)<0) return false;
+    return true;
+  });
+}
+function renderMoney(){
+  var m=getMoney(); if(!m) return;
+  fillYM('moneyYear','moneyMonth', m.transactions.map(function(t){return t.date;}));
+  var rows=moneyFiltered(m);
+  var exp=0, inc=0, byCat={};
+  rows.forEach(function(t){
+    var amt=+t.amount||0;
+    if(t.type==='income'){ inc+=amt; }
+    else { exp+=amt; (byCat[t.cat]=byCat[t.cat]||{n:0,sum:0}); byCat[t.cat].n++; byCat[t.cat].sum+=amt; }
+  });
+  setText('moneyExp', '¥'+exp.toLocaleString());
+  setText('moneyInc', '¥'+inc.toLocaleString());
+  setText('moneySaved', '¥'+(+m.saved||0).toLocaleString());
+  setText('saveCur', '¥'+(+m.saved||0).toLocaleString());
+  setText('saveGoal', '¥'+(+m.saveGoal||0).toLocaleString());
+  var pct = m.saveGoal>0 ? Math.min(100, Math.round((+m.saved||0)/m.saveGoal*100)) : 0;
+  var bar=document.getElementById('saveBar'); if(bar) bar.style.width=pct+'%';
+  setText('savePct', pct+'%');
+  // 支出分类（可下钻）
+  var box=document.getElementById('moneyCats');
+  if(box){
+    var cats=Object.keys(byCat).sort(function(a,b){return byCat[b].sum-byCat[a].sum;});
+    box.innerHTML = cats.length? cats.map(function(c){
+      var o=byCat[c];
+      return '<div class="list-item" onclick="showCatDetail(\''+esc(c)+'\')" style="cursor:pointer">'+
+        '<div class="li-icon" style="'+funIcon(c)+'">'+funEmoji(c)+'</div>'+
+        '<div class="li-info"><div class="li-title">'+esc(c)+'</div><div class="li-sub">'+o.n+' 笔 · 占比 '+(exp?Math.round(o.sum/exp*100):0)+'%</div></div>'+
+        '<div class="li-extra" style="font-weight:600">¥'+o.sum.toLocaleString()+' ›</div></div>';
+    }).join('') : '<div class="empty-state"><div class="icon">💰</div><p>该筛选条件下没有支出</p></div>';
+  }
+  // 收支明细
+  var lb=document.getElementById('moneyList');
+  if(lb){
+    var sorted=rows.slice().sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); });
+    lb.innerHTML = sorted.length? sorted.map(function(t){ return txnRow(t); }).join('')
+      : '<div class="empty-state"><div class="icon">🧾</div><p>该筛选条件下没有记录</p></div>';
+    setText('moneyListCount','共 '+sorted.length+' 笔 · 支出 ¥'+exp.toLocaleString()+' · 收入 ¥'+inc.toLocaleString());
+  }
+}
+function txnRow(t){
+  var isIn=t.type==='income';
+  return '<div class="txn-row" onclick="showTxn(\''+t.id+'\')">'+
+    '<div class="li-icon" style="'+funIcon(t.cat)+'">'+funEmoji(t.cat)+'</div>'+
+    '<div class="li-info" style="flex:1"><div class="li-title">'+esc(t.note||t.cat)+'</div>'+
+    '<div class="li-sub">'+esc(t.date)+' · '+esc(t.cat)+'</div></div>'+
+    '<div class="txn-amt '+(isIn?'in':'out')+'">'+(isIn?'+':'-')+'¥'+(+t.amount||0).toLocaleString()+'</div>'+
+    '<span class="li-del" onclick="event.stopPropagation();deleteTrans(\''+t.id+'\')">🗑</span></div>';
+}
+/* 单笔详情 */
+function showTxn(id){
+  var m=getMoney(); var t=m.transactions.find(function(x){return x.id===id;}); if(!t) return;
+  var html='<div class="modal-card">'+
+    '<div class="modal-title">'+(t.type==='income'?'💵 收入明细':'💸 支出明细')+'</div>'+
+    '<div class="modal-row"><span class="k">金额</span><span class="v" style="color:'+(t.type==='income'?'var(--success)':'#ff4d4f')+'">'+(t.type==='income'?'+':'-')+'¥'+(+t.amount||0).toLocaleString()+'</span></div>'+
+    '<div class="modal-row"><span class="k">分类</span><span class="v">'+funEmoji(t.cat)+' '+esc(t.cat)+'</span></div>'+
+    '<div class="modal-row"><span class="k">日期</span><span class="v">'+esc(t.date)+'</span></div>'+
+    '<div class="modal-row"><span class="k">类型</span><span class="v">'+(t.type==='income'?'收入':'支出')+'</span></div>'+
+    '<div class="modal-row"><span class="k">备注</span><span class="v">'+esc(t.note||'—')+'</span></div>'+
+    '<div style="display:flex;gap:8px;margin-top:14px">'+
+      '<button class="btn-primary" style="flex:1;background:#ff4d4f" onclick="deleteTrans(\''+t.id+'\');closeModal(\'txnModal\')">删除这笔</button>'+
+      '<button class="btn-primary" style="flex:1" onclick="closeModal(\'txnModal\')">关闭</button>'+
+    '</div></div>';
+  var modal=document.getElementById('txnModal'); if(!modal) return;
+  modal.innerHTML=html; modal.style.display='flex';
+  modal.onclick=function(e){ if(e.target===modal) closeModal('txnModal'); };
+}
+function saveExpense(){
+  var amt=parseFloat(document.getElementById('expAmount')&&document.getElementById('expAmount').value)||0;
+  if(!amt){ toast('请输入金额'); return; }
+  var type=document.getElementById('expType').value;
+  var cat=document.getElementById('expCat').value;
+  var note=(document.getElementById('expNote')&&document.getElementById('expNote').value||'').trim();
+  var date=(document.getElementById('expDate')&&document.getElementById('expDate').value)||_today();
+  var m=getMoney();
+  m.transactions.unshift({id:_uid(),type:type,cat:cat,amount:amt,note:note,date:date});
+  if(type==='expense' && cat==='存钱'){ m.saved=(+m.saved||0)+amt; }
+  else if(type==='income' && cat==='存钱'){ /* 存钱计入 saved */ m.saved=(+m.saved||0)+amt; }
+  saveMoney(m); renderMoney();
+  var ai=document.getElementById('expAmount'); if(ai) ai.value='';
+  var ni=document.getElementById('expNote'); if(ni) ni.value='';
+  toast('已记录');
+}
+var _curCat=null;
+function showCatDetail(cat){
+  _curCat=cat;
+  var m=getMoney();
+  var rows=moneyFiltered(m).filter(function(t){return t.cat===cat && t.type==='expense';})
+            .sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); });
+  var sum=rows.reduce(function(s,t){return s+(+t.amount||0);},0);
+  var scope=((document.getElementById('moneyYear')||{}).value||'')+' '+((document.getElementById('moneyMonth')||{}).value||'');
+  var html='<div class="modal-card">'+
+    '<div class="modal-title">'+funEmoji(cat)+' '+esc(cat)+' · '+rows.length+' 笔 / ¥'+sum.toLocaleString()+'</div>'+
+    '<div style="font-size:12px;color:var(--text-light);margin-bottom:8px">筛选范围：'+esc(scope.replace('all','全部'))+'</div>'+
+    '<div style="max-height:52vh;overflow:auto;margin:10px 0">';
+  if(rows.length===0) html+='<div class="empty-state"><div class="icon">📭</div><p>暂无记录</p></div>';
+  rows.forEach(function(t){ html+=txnRow(t); });
+  html+='</div><button class="btn-primary" style="width:100%" onclick="closeModal(\'catModal\')">关闭</button></div>';
+  var modal=document.getElementById('catModal'); if(!modal) return;
+  modal.innerHTML=html; modal.style.display='flex';
+  modal.onclick=function(e){ if(e.target===modal) closeModal('catModal'); };
+}
+function deleteTrans(id){
+  var m=getMoney(); m.transactions=m.transactions.filter(function(t){return t.id!==id;}); saveMoney(m); renderMoney();
+  var cm=document.getElementById('catModal');
+  if(cm && cm.style.display==='flex' && _curCat) showCatDetail(_curCat);
+  toast('已删除');
+}
+function closeModal(id){ var e=document.getElementById(id); if(e) e.style.display='none'; }
+
+/* ---------- 作息 / 健身 数据层 ---------- */
+function getRoutine(){ var r=_load('routine',null); if(r===null){ r={ sleep:{targetBed:'23:30',targetRise:'06:30',dur:7.5,log:{}}, rise:{target:'06:30',log:{}}, smoke:{quitDate:'2026-05-10',price:24,perDay:20,log:{}}, weight:{height:175,target:70,log:{}} }; _save('routine',r); } return r; }
+function saveRoutine(r){ _save('routine',r); }
+function getFit(){ var f=_load('fit',null); if(f===null){ f={log:{}}; _save('fit',f); } return f; }
+function saveFit(f){ _save('fit',f); }
+
+/* ---------- 通用整月日历 ---------- */
+var CAL={sleep:{y:0,m:0},rise:{y:0,m:0},fitness:{y:0,m:0},eng:{y:0,m:0},visit:{y:0,m:0}};
+(function(){ var n=new Date(); ['sleep','rise','fitness','eng','visit'].forEach(function(k){ CAL[k]={y:n.getFullYear(),m:n.getMonth()}; }); })();
+function calHeader(year,month,prefix){
+  return '<div class="mc-nav"><button class="mc-btn" onclick="calStep(\''+prefix+'\',-1)">‹</button>'+
+    '<span class="mc-title">'+year+'年'+(month+1)+'月</span>'+
+    '<button class="mc-btn" onclick="calStep(\''+prefix+'\',1)">›</button></div>';
+}
+function buildMonth(year,month,marked){
+  var heads=['一','二','三','四','五','六','日'];
+  var html='<div class="mc-heads">'+heads.map(function(h){return '<span>'+h+'</span>';}).join('')+'</div><div class="mc-cells">';
+  var first=new Date(year,month,1); var start=(first.getDay()+6)%7; var days=new Date(year,month+1,0).getDate();
+  var today=_today();
+  for(var i=0;i<start;i++) html+='<span class="mc-cell empty"></span>';
+  for(var d=1;d<=days;d++){ var k=_ymd(year,month,d); var on=marked&&marked.has(k);
+    html+='<span class="mc-cell'+(on?' on':'')+(k===today?' today':'')+'">'+d+'</span>'; }
+  html+='</div>'; return html;
+}
+function calStep(prefix,dir){
+  var s=CAL[prefix]; s.m+=dir; if(s.m<0){s.m=11;s.y--;} if(s.m>11){s.m=0;s.y++;}
+  if(prefix==='sleep') renderRoutine();
+  else if(prefix==='rise') renderRoutine();
+  else if(prefix==='fitness') renderFitness();
+  else if(prefix==='eng') renderEngCheck();
+  else if(prefix==='visit') renderVisits();
+}
+
+/* ---------- 拜访（月历 + 记录） ---------- */
+function getVisits(){
+  var a=_load('visit',null);
+  if(a===null){
+    var mk=_today().slice(0,8);
+    a=[ {id:_uid(),client:'张建国 - 万达商管',date:mk+'01',type:'上门拜访',purpose:'续保跟进',note:'确认企财险续保方案'},
+        {id:_uid(),client:'李明 - 中建三局',date:mk+'02',type:'电话沟通',purpose:'保函需求',note:'投标保函材料准备'} ];
+    _save('visit',a);
+  }
+  return Array.isArray(a)?a:[];
+}
+function saveVisits(a){ _save('visit',a); }
+function renderVisits(){
+  var list=getVisits();
+  var s=CAL.visit;
+  var byDate={}; list.forEach(function(v){ (byDate[v.date]=byDate[v.date]||[]).push(v); });
+  // 月历（有拜访的日期高亮可点）
+  var el=document.getElementById('visitCal');
+  if(el){
+    var heads=['一','二','三','四','五','六','日'];
+    var html=calHeader(s.y,s.m,'visit')+'<div class="mc-heads">'+heads.map(function(h){return '<span>'+h+'</span>';}).join('')+'</div><div class="mc-cells">';
+    var first=new Date(s.y,s.m,1); var start=(first.getDay()+6)%7; var days=new Date(s.y,s.m+1,0).getDate(); var today=_today();
+    for(var i=0;i<start;i++) html+='<span class="mc-cell empty"></span>';
+    for(var d=1;d<=days;d++){
+      var k=_ymd(s.y,s.m,d); var n=(byDate[k]||[]).length;
+      html+='<span class="mc-cell'+(n?' has':'')+(k===today?' today':'')+'"'+(n?' onclick="showDayVisits(\''+k+'\')"':'')+'>'+d+(n?'<i style="position:absolute;right:4px;top:2px;font-size:9px;font-style:normal">'+n+'</i>':'')+'</span>';
+    }
+    el.innerHTML=html+'</div>';
+  }
+  // 当前月份的记录列表
+  var mk=s.y+'-'+String(s.m+1).padStart(2,'0');
+  var rows=list.filter(function(v){ return (v.date||'').slice(0,7)===mk; }).sort(function(a,b){return (b.date||'').localeCompare(a.date||'');});
+  var box=document.getElementById('visitList');
+  if(box){
+    box.innerHTML = rows.length? rows.map(function(v){
+      return '<div class="list-item">'+
+        '<div class="li-icon" style="background:#E6F7FF">👤</div>'+
+        '<div class="li-info"><div class="li-title">'+esc(v.client)+'</div><div class="li-sub">'+esc(v.date)+' · '+esc(v.type)+' · '+esc(v.purpose)+(v.note?' · '+esc(v.note):'')+'</div></div>'+
+        '<span class="li-del" onclick="deleteVisit(\''+v.id+'\')">🗑</span></div>';
+    }).join('') : '<div class="empty-state"><div class="icon">✈️</div><p>'+mk+' 还没有拜访记录</p></div>';
+  }
+  setText('visitListTitle','（'+mk+' 共 '+rows.length+' 条）');
+  setText('vsToday', (byDate[_today()]||[]).length);
+  var dd=new Date(); var day=(dd.getDay()+6)%7; var monday=new Date(dd); monday.setDate(dd.getDate()-day);
+  setText('vsWeek', list.filter(function(v){ return new Date(v.date)>=monday; }).length);
+  setText('vsMonth', list.filter(function(v){ return (v.date||'').slice(0,7)===_monthKey(_today()); }).length);
+}
+function showDayVisits(k){
+  var rows=getVisits().filter(function(v){return v.date===k;});
+  var html='<div class="modal-card"><div class="modal-title">📅 '+k+' · '+rows.length+' 次拜访</div><div style="max-height:52vh;overflow:auto;margin:10px 0">';
+  rows.forEach(function(v){
+    html+='<div class="list-item"><div class="li-icon" style="background:#E6F7FF">👤</div>'+
+      '<div class="li-info"><div class="li-title">'+esc(v.client)+'</div><div class="li-sub">'+esc(v.type)+' · '+esc(v.purpose)+(v.note?' · '+esc(v.note):'')+'</div></div>'+
+      '<span class="li-del" onclick="deleteVisit(\''+v.id+'\')">🗑</span></div>';
+  });
+  html+='</div><button class="btn-primary" style="width:100%" onclick="closeModal(\'visitModal\')">关闭</button></div>';
+  var m=document.getElementById('visitModal'); if(!m) return;
+  m.innerHTML=html; m.style.display='flex';
+  m.onclick=function(e){ if(e.target===m) closeModal('visitModal'); };
+}
+function addVisit(){
+  var c=(document.getElementById('vsClient')&&document.getElementById('vsClient').value||'').trim();
+  if(!c){ toast('请填写拜访对象'); return; }
+  var list=getVisits();
+  list.unshift({ id:_uid(), client:c,
+    date:(document.getElementById('vsDate')&&document.getElementById('vsDate').value)||_today(),
+    type:(document.getElementById('vsType')||{}).value||'上门拜访',
+    purpose:(document.getElementById('vsPurpose')||{}).value||'日常维护',
+    note:(document.getElementById('vsNote')&&document.getElementById('vsNote').value||'').trim() });
+  saveVisits(list); renderVisits();
+  var ci=document.getElementById('vsClient'); if(ci) ci.value='';
+  var ni=document.getElementById('vsNote'); if(ni) ni.value='';
+  toast('已添加拜访');
+}
+function deleteVisit(id){
+  saveVisits(getVisits().filter(function(x){return x.id!==id;})); renderVisits();
+  var m=document.getElementById('visitModal'); if(m) m.style.display='none';
+  toast('已删除');
+}
+
+/* ---------- 作息渲染 ---------- */
+function renderRoutine(){
+  var r=getRoutine();
+  // 睡眠
+  var slog=Object.keys(r.sleep.log);
+  var sStreak=streakCount(Object.keys(r.sleep.log));
+  var sThisWeek=weekCount(r.sleep.log);
+  var durs=Object.values(r.sleep.log).map(function(x){return +x.dur||0;}).filter(function(x){return x>0;});
+  var avgDur=durs.length? (durs.reduce(function(a,b){return a+b;},0)/durs.length).toFixed(1):'--';
+  var beds=Object.values(r.sleep.log).map(function(x){return x.bed;}).filter(Boolean);
+  var avgBed=beds.length? beds[beds.length-1] : '23:30';
+  setText('rtSleepStreak', sStreak); setText('rtSleepWeek', sThisWeek+'/7'); setText('rtSleepAvg', avgDur+'h'); setText('rtSleepBed', avgBed);
+  paintCal('rtSleepCal','sleep', new Set(slog));
+  // 早起
+  var rStreak=streakCount(Object.keys(r.rise.log));
+  var rThisWeek=weekCount(r.rise.log);
+  var rises=Object.values(r.rise.log).map(function(x){return x.time;}).filter(Boolean);
+  var avgRise=rises.length? rises[rises.length-1] : '06:30';
+  setText('rtRiseStreak', rStreak); setText('rtRiseWeek', rThisWeek+'/7'); setText('rtRiseAvg', avgRise);
+  setText('rtRiseMonth', Object.keys(r.rise.log).length);
+  paintCal('rtRiseCal','rise', new Set(Object.keys(r.rise.log)));
+  // 戒烟
+  var sd=r.smoke.quitDate? new Date(r.smoke.quitDate):null;
+  var days = sd? Math.max(0, Math.round((new Date()-sd)/86400000)) : 0;
+  setText('rtSmokeDays', days);
+  setText('rtSmokeNot', days*(r.smoke.perDay||20));
+  setText('rtSmokeSave', '¥'+((days*(r.smoke.perDay||20)*(r.smoke.price||24))).toLocaleString());
+  // 体重
+  var wkeys=Object.keys(r.weight.log).sort();
+  var cur = wkeys.length? r.weight.log[wkeys[wkeys.length-1]].kg : null;
+  var firstM = Object.keys(r.weight.log).filter(function(k){return _monthKey(k)===_monthKey(_today());}).sort()[0];
+  var monthDelta = (firstM && cur!=null)? (cur - r.weight.log[firstM].kg).toFixed(1) : '--';
+  var bmi = (cur && r.weight.height)? (cur/((r.weight.height/100)*(r.weight.height/100))).toFixed(1) : '';
+  setText('rtWeightCur', cur!=null? cur+' kg':'--');
+  setText('rtWeightDelta', (monthDelta==='--'?'':(monthDelta>0?'+':'')+monthDelta)+' kg');
+  setText('rtWeightBmi', bmi);
+  setText('rtWeightDays', wkeys.length);
+}
+function paintCal(elId,prefix,marked){
+  var el=document.getElementById(elId); if(!el) return;
+  var s=CAL[prefix];
+  el.innerHTML = calHeader(s.y,s.m,prefix) + buildMonth(s.y,s.m,marked);
+}
+function streakCount(dateKeys){
+  if(!dateKeys||!dateKeys.length) return 0;
+  var set=new Set(dateKeys); var n=0; var d=new Date();
+  // 从今天往前数（今天没打卡则从昨天开始）
+  if(!set.has(_today())) d.setDate(d.getDate()-1);
+  while(set.has(_ymd(d.getFullYear(),d.getMonth(),d.getDate()))){ n++; d.setDate(d.getDate()-1); }
+  return n;
+}
+function weekCount(log){
+  var n=0; var d=new Date(); var day=(d.getDay()+6)%7; // 周一为一周开始
+  var monday=new Date(d); monday.setDate(d.getDate()-day);
+  Object.keys(log).forEach(function(k){ if(new Date(k)>=monday) n++; });
+  return n;
+}
+function saveSleep(){
+  var r=getRoutine(); var k=(document.getElementById('sleepDate')&&document.getElementById('sleepDate').value)||_today();
+  r.sleep.log[k]={ bed:(document.getElementById('sleepBed')||{}).value||'23:30', rise:(document.getElementById('sleepRise')||{}).value||'06:30', dur:parseFloat((document.getElementById('sleepDur')||{}).value)||7.5, note:(document.getElementById('sleepNote')&&document.getElementById('sleepNote').value||'').trim() };
+  saveRoutine(r); renderRoutine(); toast('已记录睡眠');
+}
+function saveRise(){
+  var r=getRoutine(); var k=(document.getElementById('riseDate')&&document.getElementById('riseDate').value)||_today();
+  r.rise.log[k]={ time:(document.getElementById('riseTime')||{}).value||'06:30', ok:true, note:(document.getElementById('riseNote')&&document.getElementById('riseNote').value||'').trim() };
+  saveRoutine(r); renderRoutine(); toast('已记录早起');
+}
+function saveSmoke(){
+  var r=getRoutine(); var k=(document.getElementById('smokeDate')&&document.getElementById('smokeDate').value)||_today();
+  r.smoke.log[k]={ smoked:(document.getElementById('smokeRes')&&document.getElementById('smokeRes').value==='smoked'), urge:parseInt((document.getElementById('smokeUrge')||{}).value||'0',10), note:(document.getElementById('smokeNote')&&document.getElementById('smokeNote').value||'').trim() };
+  saveRoutine(r); renderRoutine(); toast('已打卡');
+}
+function saveWeight(){
+  var r=getRoutine(); var k=(document.getElementById('weightDate')&&document.getElementById('weightDate').value)||_today();
+  r.weight.log[k]={ kg:parseFloat((document.getElementById('weightKg')||{}).value||0), note:(document.getElementById('weightNote')&&document.getElementById('weightNote').value||'').trim() };
+  saveRoutine(r); renderRoutine(); toast('已记录体重');
+}
+
+/* ---------- 健身渲染 ---------- */
+function renderFitness(){
+  var f=getFit(); var cur=_monthKey(_today());
+  var thisWeek=0, monthN=0, cumMin=0, cumKcal=0; var types={};
+  var d=new Date(); var day=(d.getDay()+6)%7; var monday=new Date(d); monday.setDate(d.getDate()-day);
+  Object.keys(f.log).forEach(function(k){
+    var x=f.log[k]; cumMin+=(+x.dur||0); cumKcal+=(+x.kcal||0);
+    if(_monthKey(k)===cur) monthN++;
+    if(new Date(k)>=monday) thisWeek++;
+    types[x.type]=(types[x.type]||0)+1;
+  });
+  setText('fitHeroNum', thisWeek+'/'+(thisWeek>=4?thisWeek:4));
+  setText('fitWeek', thisWeek); setText('fitMin', cumMin); setText('fitKcal', cumKcal); setText('fitMonth', monthN);
+  var tbox=document.getElementById('fitTypes');
+  if(tbox){ var ks=Object.keys(types);
+    tbox.innerHTML = ks.length? ks.map(function(t){ return '<div class="gt-item"><div class="gt-icon">🏃</div><div class="gt-name">'+esc(t)+'</div><div class="gt-count">'+types[t]+'</div></div>'; }).join('') : '<div class="empty-state"><div class="icon">🏃</div><p>还没有运动记录</p></div>';
+  }
+  paintCal('fitCal','fitness', new Set(Object.keys(f.log)));
+}
+function saveFitness(){
+  var f=getFit(); var k=(document.getElementById('fitDate')&&document.getElementById('fitDate').value)||_today();
+  f.log[k]={ type:(document.getElementById('fitType')||{}).value||'跑步', dur:parseInt((document.getElementById('fitDur')||{}).value||0,10), kcal:parseInt((document.getElementById('fitKcalIn')||{}).value||0,10), note:(document.getElementById('fitNote')&&document.getElementById('fitNote').value||'').trim() };
+  saveFit(f); renderFitness(); toast('已记录运动');
+}
+
+function renderAllLife(){
+  ['expDate','funDate','tvDate','vsDate','sleepDate','riseDate','smokeDate','weightDate','fitDate'].forEach(setDateDefault);
+  renderTodo(); renderFun(); renderTravel(); renderMoney(); renderRoutine(); renderFitness(); renderVisits();
+}
+
 function wbSave(){
   if(!WB_SESSION) return;
   localStorage.setItem('wb_user_'+WB_SESSION, JSON.stringify({v: WB_VERSION, html: WB_MAIN.innerHTML}));
@@ -2627,7 +3253,167 @@ function wbRestore(user){
   renderEngCheck();        // 用真实学习数据覆盖打卡页假数字
   wbSyncSidebar();
   initCanvas();
+  renderPerformance();   // 用统一业绩数据覆盖所有写死的统计数字
+  renderAllLife();       // 待办/娱乐/记账/作息/健身 全部从数据层动态渲染
+  renderEngCheck();      // 英语打卡（含整月日历）
 }
+
+/* ============ 统一业绩数据模型（单一数据源） ============ */
+function getPerf(){
+  if(!WB_SESSION) return {monthlyTarget:500000, commissionRate:0.10, records:[]};
+  let d=null;
+  try { d = JSON.parse(localStorage.getItem('wb_perf_'+WB_SESSION)); } catch(e){}
+  if(!d || !Array.isArray(d.records)){
+    // 种子数据：取自原演示业务，统一为可计算的结构（保证数字真实且一致）
+    d = {
+      monthlyTarget: 500000,
+      commissionRate: 0.10,
+      records: [
+        {type:'财险', name:'企业财产险',     client:'华为技术',   premium:86000,  fee:0,    status:'承保',   date:'2026-08-01'},
+        {type:'财险', name:'企业财产险',     client:'万达商业',   premium:86000,  fee:0,    status:'承保',   date:'2026-07-28'},
+        {type:'财险', name:'建筑工程一切险', client:'中铁建设',   premium:120000, fee:0,    status:'承保',   date:'2026-07-20'},
+        {type:'财险', name:'货物运输险',     client:'洋帆货运',   premium:18500,  fee:0,    status:'承保',   date:'2026-07-15'},
+        {type:'财险', name:'雇主责任险',     client:'中建三局',   premium:45000,  fee:0,    status:'承保',   date:'2026-07-10'},
+        {type:'其他', name:'企财险续保',     client:'万达商业',   premium:86000,  fee:0,    status:'承保',   date:'2026-08-02'},
+        {type:'其他', name:'货运险续保',     client:'洋帆货运',   premium:18500,  fee:0,    status:'承保',   date:'2026-07-30'},
+        {type:'保函', name:'投标保函',       client:'中建三局',   premium:5000000,fee:18000, status:'审批中', date:'2026-07-25'},
+        {type:'保函', name:'履约保函',       client:'中铁建设',   premium:8000000,fee:20000, status:'已出具', date:'2026-07-18'},
+        {type:'保函', name:'投标保函',       client:'中交集团',   premium:3000000,fee:12000, status:'材料准备',date:'2026-07-22'},
+        {type:'保函', name:'预付款保函',     client:'万达商管',   premium:2000000,fee:9000,  status:'已出具', date:'2026-07-12'}
+      ]
+    };
+    savePerf(d);
+  }
+  return d;
+}
+function savePerf(d){ if(!WB_SESSION) return; localStorage.setItem('wb_perf_'+WB_SESSION, JSON.stringify(d)); }
+const PERF_ISSUED = ['承保','已出具','已承保'];
+function perfStats(d){
+  d = d || getPerf();
+  const cx   = d.records.filter(r=>r.type==='财险' && PERF_ISSUED.includes(r.status)).length;
+  const qt   = d.records.filter(r=>r.type==='其他' && PERF_ISSUED.includes(r.status)).length;
+  const bh   = d.records.filter(r=>r.type==='保函' && PERF_ISSUED.includes(r.status)).length;
+  const premium = d.records.filter(r=>r.type==='财险'||r.type==='其他').reduce((s,r)=>s+(+r.premium||0),0);
+  const fee     = d.records.filter(r=>r.type==='保函').reduce((s,r)=>s+(+r.fee||0),0);
+  const commission = Math.round(premium*(d.commissionRate||0.1));
+  const target = d.monthlyTarget||500000;
+  const pct = target>0 ? Math.min(100, Math.round(premium/target*100)) : 0;
+  const totalPolicies = d.records.filter(r=>r.type==='财险'||r.type==='其他').length;
+  const guaranteeBalance = d.records.filter(r=>r.type==='保函').reduce((s,r)=>s+(+r.premium||0),0);
+  return {cx,qt,bh,premium,fee,commission,target,pct,totalPolicies,guaranteeBalance};
+}
+function fmtMoney(n){
+  n = +n||0;
+  if(n>=100000000) return '¥'+(n/100000000).toFixed(2)+'亿';
+  if(n>=10000)     return '¥'+(n/10000).toFixed(n%10000?1:0)+'万';
+  return '¥'+n.toLocaleString();
+}
+function _q(sel,root){ return (root||document).querySelector(sel); }
+function _qa(sel,root){ return Array.from((root||document).querySelectorAll(sel)); }
+function renderPerformance(){
+  const d = getPerf(); if(!d) return;
+  const s = perfStats(d);
+  // hero 出单统计（按标签文字匹配，兼容旧快照）
+  _qa('.hero-stat').forEach(el=>{
+    const lb=el.querySelector('.label'); if(!lb) return;
+    const n=el.querySelector('.num'); if(!n) return;
+    const t=lb.textContent.trim();
+    if(t==='财险出单') n.textContent=s.cx;
+    else if(t==='其他出单') n.textContent=s.qt;
+    else if(t==='保函出单') n.textContent=s.bh;
+  });
+  // 业绩看板：副标题 + 进度环
+  const board=_q('#perf-board');
+  if(board){
+    const st=board.querySelector('.sub-text');
+    if(st) st.innerHTML='目标 <span>'+fmtMoney(s.target)+'</span> · 已完成 <span>'+fmtMoney(s.premium)+'</span>';
+    const ring=board.querySelector('svg.progress-ring path[stroke="white"]')||_q('#perfRingBar');
+    if(ring) ring.setAttribute('stroke-dasharray', s.pct+', 100');
+    const rt=board.querySelector('svg.progress-ring text')||_q('#perfRingText');
+    if(rt) rt.textContent=s.pct+'%';
+  }
+  // 目标卡
+  const phc=_q('.perf-header-card');
+  if(phc){
+    const big=phc.querySelector('div[style*="font-size:32px"]'); if(big) big.textContent=fmtMoney(s.premium);
+    const tg=phc.querySelector('div[style*="opacity:0.85"]'); if(tg) tg.innerHTML='目标 <span>'+fmtMoney(s.target)+'</span>';
+    const bar=_q('.perf-progress-fill'); if(bar) bar.style.width=s.pct+'%';
+  }
+  const row=_q('.perf-target-row');
+  if(row){
+    const a=row.querySelector(':scope > div:first-child div[style*="font-weight:600"]'); if(a) a.textContent=fmtMoney(s.premium);
+    const b=row.querySelector(':scope > div:last-child div[style*="font-weight:600"]'); if(b) b.textContent=fmtMoney(s.fee);
+  }
+  _qa('.pb-card').forEach(c=>{
+    const lab=c.querySelector('.pb-label'); if(lab && lab.textContent.trim()==='预计佣金'){ const v=c.querySelector('.pb-value'); if(v) v.textContent=fmtMoney(s.commission); }
+  });
+  // 收入页三项
+  const inc=_q('.fo-item.income .fo-value'); if(inc) inc.textContent=fmtMoney(s.premium);
+  const com=_q('.fo-item.commission .fo-value'); if(com) com.textContent=fmtMoney(s.commission);
+  const fee=_q('.fo-item.guarantee-fee .fo-value'); if(fee) fee.textContent=fmtMoney(s.fee);
+  // 保单统计
+  _qa('.ps-card').forEach(c=>{
+    const lab=c.querySelector('.ps-label'); if(!lab) return;
+    const n=c.querySelector('.ps-num'); if(!n) return;
+    const t=lab.textContent.trim();
+    if(t==='有效保单') n.textContent=s.totalPolicies;
+    else if(t==='本月保费') n.textContent=fmtMoney(s.premium);
+    else if(t==='即将到期') n.textContent=3;
+    else if(t==='待续保') n.textContent=5;
+  });
+  // 保函统计
+  _qa('#cl-guarantee div').forEach(el=>{
+    const t=el.textContent.trim();
+    if(t==='在保余额'||t==='累计手续费'){ const num=el.previousElementSibling; if(num) num.textContent=(t==='在保余额')?fmtMoney(s.guaranteeBalance):fmtMoney(s.fee); }
+  });
+  // 首页背景统计
+  _qa('.study-stats .ss-item').forEach(el=>{
+    const lab=el.querySelector('.ss-label'); if(!lab) return;
+    const n=el.querySelector('.ss-num'); if(!n) return;
+    const t=lab.textContent.trim();
+    if(t==='今日待办'){ const tl=_q('#todoList'); n.textContent= tl? tl.querySelectorAll('.todo-item').length:0; }
+    else if(t==='待结算佣金') n.textContent=fmtMoney(s.commission);
+    else if(t==='本月业绩') n.textContent=s.pct+'%';
+  });
+  // 收入构成饼图
+  const pieWrap=_q('#perf-income');
+  if(pieWrap){
+    const cxP=d.records.filter(r=>r.type==='财险').reduce((a,r)=>a+(+r.premium||0),0);
+    const bhP=d.records.filter(r=>r.type==='保函').reduce((a,r)=>a+(+r.premium||0),0);
+    const otP=d.records.filter(r=>r.type==='其他').reduce((a,r)=>a+(+r.premium||0),0);
+    const tot=cxP+bhP+otP||1;
+    const cxp=Math.round(cxP/tot*100), bhp=Math.round(bhP/tot*100), otp=100-cxp-bhp;
+    const segs=_qa('#perf-income svg circle').filter(c=>{const st=c.getAttribute('stroke'); return st && st!=='#E8F0FE';});
+    if(segs[0]){ segs[0].setAttribute('stroke-dasharray',cxp+' 100'); segs[0].setAttribute('stroke-dashoffset','25'); }
+    if(segs[1]){ segs[1].setAttribute('stroke-dasharray',bhp+' 100'); segs[1].setAttribute('stroke-dashoffset',(25-cxp)+''); }
+    if(segs[2]){ segs[2].setAttribute('stroke-dasharray',otp+' 100'); segs[2].setAttribute('stroke-dashoffset',(25-cxp-bhp)+''); }
+    _qa('#perf-income .card span').forEach(sp=>{
+      const t=sp.textContent;
+      if(t.indexOf('财险')>=0) sp.textContent='财险 '+cxp+'%';
+      else if(t.indexOf('保函')>=0) sp.textContent='保函 '+bhp+'%';
+      else if(t.indexOf('其他')>=0) sp.textContent='其他 '+otp+'%';
+    });
+  }
+}
+function saveIncome(){
+  const d = getPerf(); if(!d){ toast('请先登录'); return; }
+  const amt = parseFloat(document.getElementById('incAmount') && document.getElementById('incAmount').value) || 0;
+  const type = document.getElementById('incType') ? document.getElementById('incType').value : '保费收入';
+  if(!amt){ toast('请输入金额'); return; }
+  const today = new Date().toISOString().slice(0,10);
+  if(type==='佣金到账'){
+    toast('佣金已计入统计');
+    if(document.getElementById('incAmount')) document.getElementById('incAmount').value='';
+    renderPerformance(); return;
+  }
+  let rec = {type:'财险', name:type, client:'', premium:amt, fee:0, status:'承保', date:today};
+  if(type==='续保奖励'){ rec.type='其他'; rec.name='续保奖励'; }
+  else if(type==='保函手续费'){ rec.type='保函'; rec.fee=amt; rec.premium=0; rec.name='保函手续费'; rec.status='已出具'; }
+  d.records.push(rec); savePerf(d); renderPerformance();
+  if(document.getElementById('incAmount')) document.getElementById('incAmount').value='';
+  toast('已记录到业绩统计');
+}
+
 function wbLoginOK(user){
   WB_SESSION = user;
   localStorage.setItem('wb_session', user);
