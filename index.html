@@ -149,10 +149,12 @@ body {
 
 @media (max-width: 480px) {
   .sidebar {
+    left: 0;
     transform: translateX(-100%);
     transition: transform .28s ease;
     border-radius: 0 16px 16px 0;
     box-shadow: none;
+    width: 200px;
   }
   .sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,.15); }
   .main-content { margin-left: 0; }
@@ -163,6 +165,21 @@ body {
     background: rgba(0,0,0,.35);
   }
   .sb-overlay.show { display: block; }
+  /* 手机端侧栏展开时显示关闭按钮 */
+  .sidebar .sb-close {
+    display: flex !important;
+  }
+  .sidebar-item {
+    width: auto;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 10px 16px;
+    gap: 10px;
+    border-radius: 12px;
+    height: auto;
+  }
+  .sidebar-item .icon { font-size: 20px; }
+  .sidebar-item .label { font-size: 13px; }
 }
 .page { display: none; padding: 16px; animation: fadeIn 0.25s ease; }
 .page.active { display: block; }
@@ -686,6 +703,7 @@ body {
 
 <!-- ===== Sidebar ===== -->
 <nav class="sidebar" id="sidebar">
+  <div class="sb-close" style="display:none;align-self:flex-end;padding:8px 12px;font-size:20px;cursor:pointer;color:var(--text-light);line-height:1" onclick="closeSidebar()">✕</div>
   <div class="sidebar-group-label">工作</div>
   <div class="sidebar-item active" data-page="home" onclick="switchPage('home')">
     <span class="icon">🏠</span><span class="label">首页</span>
