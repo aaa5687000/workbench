@@ -368,7 +368,20 @@ body {
 .tag.personal { background: #FFF7E6; color: #FA8C16; }
 .tag.guarantee { background: #F6FFED; color: #52C41A; }
 .tag.renew { background: #FFF1F0; color: #FF4D4F; }
+.tag.deal { background: #F6FFED; color: #52C41A; }
+.tag.quote { background: #E6F7FF; color: #1890FF; }
+.tag.consider { background: #FFF7E6; color: #FA8C16; }
+.tag.reject { background: #FFF1F0; color: #FF4D4F; }
+.tag.wx { background: #F9F0FF; color: #722ED1; }
 .client-action { color: var(--primary); font-size: 20px; cursor: pointer; }
+.client-del { margin-left: 4px; font-size: 16px; cursor: pointer; flex-shrink: 0; opacity: .55; }
+.client-del:active { opacity: 1; }
+.tag-toggle { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 16px; font-size: 13px; border: 1px solid var(--border); background: #fff; cursor: pointer; transition: .15s; }
+.tag-toggle.on { background: var(--primary); color: #fff; border-color: var(--primary); }
+.modal-form .form-group { margin-bottom: 12px; }
+.modal-form label { font-size: 13px; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 6px; }
+.modal-form input, .modal-form select, .modal-form textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-family: inherit; outline: none; box-sizing: border-box; }
+.modal-form input:focus, .modal-form select:focus, .modal-form textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(91,108,249,.12); }
 
 /* ===== Policy / Guarantee list ===== */
 .policy-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
@@ -758,10 +771,10 @@ body {
   </div>
 
   <div class="study-stats">
-    <div class="ss-item"><div class="ss-num blue" id="homeTodo">0</div><div class="ss-label">今日待办</div></div>
-    <div class="ss-item"><div class="ss-num orange" id="homeCommission">¥0</div><div class="ss-label">待结算佣金</div></div>
-    <div class="ss-item"><div class="ss-num green" id="homePerfPct">0%</div><div class="ss-label">本月业绩</div></div>
-    <div class="ss-item"><div class="ss-num purple">21</div><div class="ss-label">英语连打卡</div></div>
+    <div class="ss-item" onclick="switchPage('todo')" style="cursor:pointer"><div class="ss-num blue" id="homeTodo">0</div><div class="ss-label">今日待办</div></div>
+    <div class="ss-item" onclick="switchPage('performance')" style="cursor:pointer"><div class="ss-num orange" id="homeCommission">¥0</div><div class="ss-label">待结算佣金</div></div>
+    <div class="ss-item" onclick="switchPage('performance')" style="cursor:pointer"><div class="ss-num green" id="homePerfPct">0%</div><div class="ss-label">本月业绩</div></div>
+    <div class="ss-item" onclick="switchPage('english')" style="cursor:pointer"><div class="ss-num purple" id="homeStreak">0</div><div class="ss-label">英语连打卡</div></div>
   </div>
 
   <div class="section-label">⚡ 快捷入口</div>
@@ -777,7 +790,7 @@ body {
   </div>
 
   <div class="section-label">🔔 今日重点</div>
-  <div class="card" style="padding:0">
+  <div class="card" style="padding:0" id="homeFocus">
     <div class="list-item"><div class="li-icon" style="background:#FFF7E6">💰</div><div class="li-info"><div class="li-title">核对 7 月佣金明细并提交流水结算</div><div class="li-sub">佣金待结算 · 截止 08-05</div></div><div class="li-check" onclick="switchPage('todo')">→</div></div>
     <div class="list-item"><div class="li-icon" style="background:#E6F7FF">👤</div><div class="li-info"><div class="li-title">联系张总确认企财险续保方案</div><div class="li-sub">客户跟进 · 今天</div></div><div class="li-check" onclick="switchPage('todo')">→</div></div>
     <div class="list-item"><div class="li-icon" style="background:#F9F0FF">📜</div><div class="li-info"><div class="li-title">准备中建三局投标保函材料</div><div class="li-sub">保函业务 · 今天</div></div><div class="li-check" onclick="switchPage('todo')">→</div></div>
@@ -832,8 +845,8 @@ body {
       <div class="ce-arrow">›</div>
     </div>
 
-    <div class="section-label">今日工作概览 <span class="date-info">8月3日 · 周日</span></div>
-    <div class="today-grid">
+    <div class="section-label">今日工作概览 <span class="date-info" id="perfDateInfo"></span></div>
+    <div class="today-grid" id="perfTodayGrid">
       <div class="today-item" onclick="switchPage('todo')">
         <div class="ti-header"><span class="ti-icon">✅</span><span class="ti-status done">✓ 2/5</span></div>
         <div class="ti-name">工作待办</div><div class="ti-desc">3项待处理</div>
@@ -861,20 +874,15 @@ body {
     </div>
 
     <div class="section-label">近期动态</div>
-    <div class="card">
-      <div style="font-size:13px;line-height:2">
-        <div>📋 <b>企财险</b> 华为技术 · ¥86,000 · 已承保</div>
-        <div>📜 <b>投标保函</b> 中建三局 · ¥500万 · 审批中</div>
-        <div>👥 回访 <b>张总（万达广场）</b> · 意向续保</div>
-        <div>🤝 拜访 <b>李工（中铁建）</b> · 保函需求对接</div>
-      </div>
+    <div class="card" id="perfFeed">
+      <div style="font-size:13px;line-height:2" id="perfFeedBody"></div>
     </div>
   </div>
 
   <!-- 目标 -->
   <div class="subtab-content" id="perf-goal">
     <div class="perf-header-card">
-      <div style="font-size:14px;opacity:0.85">2026年8月 · 月度目标</div>
+      <div style="font-size:14px;opacity:0.8" id="goalMonthLabel">2026年8月 · 月度目标</div>
       <div style="font-size:32px;font-weight:700;margin:8px 0" id="goalDone">¥0</div>
       <div style="font-size:13px;opacity:0.85">目标 <span id="goalTarget">¥0</span></div>
       <div class="perf-progress-bar"><div class="perf-progress-fill" id="goalBar" style="width:0%"></div></div>
@@ -889,23 +897,13 @@ body {
       <button class="filter-tab">按年</button>
     </div>
     <div class="perf-breakdown">
-      <div class="pb-card"><div class="pb-label">本月新单保费</div><div class="pb-value up">¥156,000</div><div class="pb-sub">↑ 较上月 +23%</div></div>
-      <div class="pb-card"><div class="pb-label">续保保费</div><div class="pb-value up">¥36,000</div><div class="pb-sub">3笔续保成功</div></div>
-      <div class="pb-card"><div class="pb-label">保函手续费</div><div class="pb-value up">¥36,000</div><div class="pb-sub">2份保函出具</div></div>
+      <div class="pb-card"><div class="pb-label">本月新单保费</div><div class="pb-value up">¥0</div><div class="pb-sub">—</div></div>
+      <div class="pb-card"><div class="pb-label">续保保费</div><div class="pb-value up">¥0</div><div class="pb-sub">—</div></div>
+      <div class="pb-card"><div class="pb-label">保函手续费</div><div class="pb-value up">¥0</div><div class="pb-sub">—</div></div>
       <div class="pb-card"><div class="pb-label">预计佣金</div><div class="pb-value" style="color:var(--primary)" id="goalCommission">¥0</div><div class="pb-sub">约费率10%</div></div>
     </div>
-    <div class="section-label">业绩趋势</div>
-    <div class="card">
-      <div style="height:180px;display:flex;align-items:end;gap:6px;padding:10px 0">
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:40px;background:linear-gradient(to top,var(--primary),#7CB3F0);border-radius:4px 4px 0 0"></div><span style="font-size:10px;color:var(--text-light)">3月</span></div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:55px;background:linear-gradient(to top,var(--primary),#7CB3F0);border-radius:4px 4px 0 0"></div><span style="font-size:10px;color:var(--text-light)">4月</span></div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:45px;background:linear-gradient(to top,var(--primary),#7CB3F0);border-radius:4px 4px 0 0"></div><span style="font-size:10px;color:var(--text-light)">5月</span></div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:70px;background:linear-gradient(to top,var(--primary),#7CB3F0);border-radius:4px 4px 0 0"></div><span style="font-size:10px;color:var(--text-light)">6月</span></div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:60px;background:linear-gradient(to top,var(--primary),#7CB3F0);border-radius:4px 4px 0 0"></div><span style="font-size:10px;color:var(--text-light)">7月</span></div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:80px;background:linear-gradient(to top,#5B6CF9,#8B9FEE);border-radius:4px 4px 0 0"></div><span style="font-size:10px;color:var(--primary);font-weight:600">8月</span></div>
-      </div>
-      <div style="text-align:center;font-size:11px;color:var(--text-light);padding-top:8px">单位：万元 | 数据截至今日</div>
-    </div>
+    <div class="section-label">业绩趋势（近 6 个月保费）</div>
+    <div class="card" id="perfTrend" style="min-height:180px"></div>
   </div>
 
   <!-- 收入 -->
@@ -922,7 +920,7 @@ body {
         <div class="form-group"><label>收入类型</label><select id="incType"><option>保费收入</option><option>佣金到账</option><option>保函手续费</option><option>续保奖励</option></select></div>
       </div>
       <div class="form-group"><label>关联客户/项目（选填）</label><input type="text" placeholder="如：华为企财险"></div>
-      <div class="form-group"><label>入账日期</label><input type="date" value="2026-08-03"></div>
+      <div class="form-group"><label>入账日期</label><input type="date" id="incDate"></div>
       <button class="btn-primary" style="width:100%" onclick="saveIncome()">记账</button>
     </div>
     <div class="section-label">📊 收入构成占比</div>
@@ -1082,20 +1080,32 @@ body {
   </div>
 </div>
 
+  <div class="wb-modal" id="perfModal"></div>
+
 <!-- ========== 客户 HUB ========== -->
 <div class="page" id="page-client">
   <div class="page-header">
     <div>
       <div class="page-title">客户中心</div>
-      <div class="page-subtitle">财产险 / 保函 客户、保单、保函、拜访统一管理</div>
+      <div class="page-subtitle">客户 · 保单 · 保函 · 拜访 统一管理</div>
     </div>
-    <button class="badge-btn">+ 新增</button>
+    <button class="badge-btn" onclick="openClientForm()">+ 新增</button>
   </div>
 
-  <div class="filter-row" id="clientFilter">
-    <button class="filter-tab active" onclick="clientFilterType(this,'全部')">全部</button>
-    <button class="filter-tab" onclick="clientFilterType(this,'财产险')">🏢 财产险</button>
-    <button class="filter-tab" onclick="clientFilterType(this,'保函')">📜 保函</button>
+  <!-- 标签筛选（可点击统计下钻） -->
+  <div class="filter-row" id="clientTagFilter">
+    <button class="filter-tab active" onclick="clientSetTag(this,'全部')">全部</button>
+    <button class="filter-tab" onclick="clientSetTag(this,'成交')">✅ 成交</button>
+    <button class="filter-tab" onclick="clientSetTag(this,'已报价')">💡 已报价</button>
+    <button class="filter-tab" onclick="clientSetTag(this,'考虑')">🤔 考虑</button>
+    <button class="filter-tab" onclick="clientSetTag(this,'拒绝')">🚫 拒绝</button>
+    <button class="filter-tab" onclick="clientSetTag(this,'加微')">➕ 加微</button>
+  </div>
+  <div class="filter-row" id="clientTypeFilter" style="margin-top:8px">
+    <button class="filter-tab active" onclick="clientSetType(this,'全部')">全部类型</button>
+    <button class="filter-tab" onclick="clientSetType(this,'财产险')">🏢 财产险</button>
+    <button class="filter-tab" onclick="clientSetType(this,'保函')">📜 保函</button>
+    <button class="filter-tab" onclick="clientSetType(this,'个人')">👤 个人</button>
   </div>
 
   <div class="subtabs">
@@ -1107,98 +1117,34 @@ body {
 
   <!-- 客户列表 -->
   <div class="subtab-content active" id="cl-list">
-    <div class="client-summary">
-      <div class="cs-item"><div class="cs-num">48</div><div class="cs-label">全部客户</div></div>
-      <div class="cs-item"><div class="cs-num" style="color:var(--success)">12</div><div class="cs-label">意向客户</div></div>
-      <div class="cs-item"><div class="cs-num" style="color:var(--danger)">6</div><div class="cs-label">待续保</div></div>
+    <div class="client-summary" id="clientSummary">
+      <div class="cs-item" style="cursor:pointer" onclick="clientSetTag(null,'全部')"><div class="cs-num" id="csAll">0</div><div class="cs-label">全部客户</div></div>
+      <div class="cs-item" style="cursor:pointer" onclick="clientSetTag(null,'成交')"><div class="cs-num" style="color:var(--success)" id="csDeal">0</div><div class="cs-label">成交</div></div>
+      <div class="cs-item" style="cursor:pointer" onclick="clientSetTag(null,'已报价')"><div class="cs-num" style="color:var(--primary)" id="csQuote">0</div><div class="cs-label">已报价</div></div>
+      <div class="cs-item" style="cursor:pointer" onclick="clientSetTag(null,'加微')"><div class="cs-num" style="color:#722ED1" id="csWx">0</div><div class="cs-label">加微</div></div>
     </div>
-    <div class="search-bar"><input type="text" placeholder="搜索客户名称、公司..."></div>
-    <div class="card" style="padding:0" id="clientCardList">
-      <!-- 财产险 -->
-      <div class="client-card" data-type="财产险">
-        <div class="client-avatar">张</div>
-        <div class="client-info"><div class="client-name">张建国 总经理</div><div class="client-company">万达商业管理有限公司</div>
-          <div class="client-tags"><span class="tag enterprise">财产险</span><span class="tag renew">待续保</span></div></div>
-        <div class="client-action">›</div>
-      </div>
-      <div class="client-card" data-type="财产险">
-        <div class="client-avatar" style="background:linear-gradient(135deg,#FA8C16,#FFA940)">陈</div>
-        <div class="client-info"><div class="client-name">陈芳 财务总监</div><div class="client-company">华为技术有限公司</div>
-          <div class="client-tags"><span class="tag enterprise">财产险</span></div></div>
-        <div class="client-action">›</div>
-      </div>
-      <div class="client-card" data-type="财产险">
-        <div class="client-avatar" style="background:linear-gradient(135deg,#EB2F96,#F759AB)">刘</div>
-        <div class="client-info"><div class="client-name">刘洋 个体经营</div><div class="client-company">洋帆货运代理</div>
-          <div class="client-tags"><span class="tag personal">个人</span></div></div>
-        <div class="client-action">›</div>
-      </div>
-      <!-- 保函 -->
-      <div class="client-card" data-type="保函">
-        <div class="client-avatar" style="background:linear-gradient(135deg,#52C41A,#73D13D)">李</div>
-        <div class="client-info"><div class="client-name">李明 工程部经理</div><div class="client-company">中国建筑第三工程局</div>
-          <div class="client-tags"><span class="tag guarantee">保函</span></div></div>
-        <div class="client-action">›</div>
-      </div>
-      <div class="client-card" data-type="保函">
-        <div class="client-avatar" style="background:linear-gradient(135deg,#722ED1,#9254DE)">周</div>
-        <div class="client-info"><div class="client-name">周强 项目经理</div><div class="client-company">中铁建设集团</div>
-          <div class="client-tags"><span class="tag guarantee">保函</span><span class="tag renew">待续保</span></div></div>
-        <div class="client-action">›</div>
-      </div>
-    </div>
-    <p style="text-align:center;color:var(--text-light);font-size:12px;margin-top:12px" id="clientEmpty" hidden>该分类下暂无客户</p>
+    <div class="search-bar"><input type="text" id="clientSearch" placeholder="搜索客户名称、公司..." oninput="renderClients()"></div>
+    <div class="card" style="padding:0" id="clientCardList"></div>
+    <p style="text-align:center;color:var(--text-light);font-size:12px;margin-top:12px" id="clientEmpty" hidden>该筛选下暂无客户</p>
   </div>
 
-  <!-- 保单（财产险） -->
+  <!-- 保单（财产险成交客户派生） -->
   <div class="subtab-content" id="cl-policy">
     <div class="policy-stats-grid">
       <div class="ps-card blue"><div class="ps-num" style="color:var(--primary)" id="psValid">0</div><div class="ps-label">有效保单</div></div>
-      <div class="ps-card green"><div class="ps-num" style="color:var(--success)" id="psPremium">¥0</div><div class="ps-label">本月保费</div></div>
+      <div class="ps-card green"><div class="ps-num" style="color:var(--success)" id="psPremium">¥0</div><div class="ps-label">在保保费</div></div>
       <div class="ps-card orange"><div class="ps-num" style="color:var(--warning)" id="psExpiring">0</div><div class="ps-label">即将到期</div></div>
       <div class="ps-card red"><div class="ps-num" style="color:var(--danger)" id="psRenew">0</div><div class="ps-label">待续保</div></div>
     </div>
-    <div class="section-label">近14天到期</div>
-    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px">
-      <span style="width:32px;height:32px;border-radius:8px;background:#F5F5F5;display:flex;align-items:center;justify-content:center;font-size:11px">20</span>
-      <span style="width:32px;height:32px;border-radius:8px;background:#F5F5F5;display:flex;align-items:center;justify-content:center;font-size:11px">21</span>
-      <span style="width:32px;height:32px;border-radius:8px;background:#F5F5F5;display:flex;align-items:center;justify-content:center;font-size:11px">22</span>
-      <span style="width:32px;height:32px;border-radius:8px;background:#F5F5F5;display:flex;align-items:center;justify-content:center;font-size:11px">23</span>
-      <span style="width:32px;height:32px;border-radius:8px;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600">24</span>
-      <span style="width:32px;height:32px;border-radius:8px;background:#FFF1F0;color:var(--danger);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600">25</span>
-      <span style="width:32px;height:32px;border-radius:8px;background:#F5F5F5;display:flex;align-items:center;justify-content:center;font-size:11px">26</span>
-      <span style="width:32px;height:32px;border-radius:8px;background:#F5F5F5;display:flex;align-items:center;justify-content:center;font-size:11px">27</span>
-      <span style="width:32px;height:32px;border-radius:8px;background:#F5F5F5;display:flex;align-items:center;justify-content:center;font-size:11px">28</span>
-      <span style="width:32px;height:32px;border-radius:8px;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;border:2px solid var(--primary-dark)">3</span>
-      <span style="width:32px;height:32px;border-radius:8px;background:#F5F5F5;display:flex;align-items:center;justify-content:center;font-size:11px">4</span>
-      <span style="width:32px;height:32px;border-radius:8px;background:#FFF1F0;color:var(--danger);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600">5</span>
-      <span style="width:32px;height:32px;border-radius:8px;background:#F5F5F5;display:flex;align-items:center;justify-content:center;font-size:11px">6</span>
-      <span style="width:32px;height:32px;border-radius:8px;background:#F5F5F5;display:flex;align-items:center;justify-content:center;font-size:11px">7</span>
-    </div>
-    <div class="section-label">保单列表</div>
-    <div class="card" style="padding:0">
-      <div class="policy-item"><div class="policy-icon" style="background:#E6F7FF">🏢</div><div class="policy-detail"><div class="policy-name">企业财产险</div><div class="policy-client">万达商业 · 张建国</div></div><div class="policy-extra"><div class="policy-premium">¥86,000</div><div class="policy-date" style="color:var(--danger)">剩余2天到期</div></div></div>
-      <div class="policy-item"><div class="policy-icon" style="background:#F6FFED">🏗️</div><div class="policy-detail"><div class="policy-name">建筑工程一切险</div><div class="policy-client">中铁建设 · 周强</div></div><div class="policy-extra"><div class="policy-premium">¥120,000</div><div class="policy-date" style="color:var(--warning)">剩余8天到期</div></div></div>
-      <div class="policy-item"><div class="policy-icon" style="background:#FFF7E6">🚛</div><div class="policy-detail"><div class="policy-name">货物运输险</div><div class="policy-client">洋帆货运 · 刘洋</div></div><div class="policy-extra"><div class="policy-premium">¥18,500</div><div class="policy-date" style="color:var(--warning)">剩余12天到期</div></div></div>
-      <div class="policy-item"><div class="policy-icon" style="background:#E6F7FF">🏢</div><div class="policy-detail"><div class="policy-name">企业财产险</div><div class="policy-client">华为技术 · 陈芳</div></div><div class="policy-extra"><div class="policy-premium">¥86,000</div><div class="policy-date" style="color:var(--success)">承保中</div></div></div>
-      <div class="policy-item"><div class="policy-icon" style="background:#F9F0FF">🏥</div><div class="policy-detail"><div class="policy-name">雇主责任险</div><div class="policy-client">中建三局 · 李明</div></div><div class="policy-extra"><div class="policy-premium">¥45,000</div><div class="policy-date" style="color:var(--success)">承保中</div></div></div>
-    </div>
+    <div class="section-label">保单列表（财产险成交客户）</div>
+    <div class="card" style="padding:0" id="policyList"></div>
   </div>
 
-  <!-- 保函 -->
+  <!-- 保函（保函成交客户派生） -->
   <div class="subtab-content" id="cl-guarantee">
-    <div class="guarantee-types">
-      <div class="gt-item active"><div class="gt-icon">📝</div><div class="gt-name">投标保函</div><div class="gt-count">5</div></div>
-      <div class="gt-item"><div class="gt-icon">🤝</div><div class="gt-name">履约保函</div><div class="gt-count">3</div></div>
-      <div class="gt-item"><div class="gt-icon">💳</div><div class="gt-name">预付款保函</div><div class="gt-count">2</div></div>
-    </div>
-    <div class="section-label">保函清单</div>
-    <div class="card" style="padding:0">
-      <div class="policy-item"><div class="policy-icon" style="background:#E6F7FF">📝</div><div class="policy-detail"><div class="policy-name">投标保函</div><div class="policy-client">中建三局 · 市政道路项目</div></div><div class="policy-extra"><div class="policy-premium" style="color:var(--primary)">¥500万</div><span class="g-status processing">审批中</span></div></div>
-      <div class="policy-item"><div class="policy-icon" style="background:#F6FFED">🤝</div><div class="policy-detail"><div class="policy-name">履约保函</div><div class="policy-client">中铁建设 · 商业综合体</div></div><div class="policy-extra"><div class="policy-premium" style="color:var(--primary)">¥800万</div><span class="g-status done">已出具</span></div></div>
-      <div class="policy-item"><div class="policy-icon" style="background:#FFF7E6">📝</div><div class="policy-detail"><div class="policy-name">投标保函</div><div class="policy-client">中交集团 · 港口扩建</div></div><div class="policy-extra"><div class="policy-premium" style="color:var(--primary)">¥300万</div><span class="g-status pending">材料准备</span></div></div>
-      <div class="policy-item"><div class="policy-icon" style="background:#F9F0FF">💳</div><div class="policy-detail"><div class="policy-name">预付款保函</div><div class="policy-client">万达商管 · 装修工程</div></div><div class="policy-extra"><div class="policy-premium" style="color:var(--primary)">¥200万</div><span class="g-status done">已出具</span></div></div>
-    </div>
+    <div class="guarantee-types" id="gtTypes"></div>
+    <div class="section-label">保函清单（保函成交客户）</div>
+    <div class="card" style="padding:0" id="guaranteeList"></div>
     <div class="card" style="margin-top:12px">
       <div class="card-title">📊 保函统计</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
@@ -1233,6 +1179,9 @@ body {
     <div class="wb-modal" id="visitModal"></div>
   </div>
 </div>
+
+<!-- 客户新增/编辑弹窗 -->
+<div class="wb-modal" id="clientModal"></div>
 
 <!-- ========== 待办 HUB ========== -->
 <div class="page" id="page-todo">
@@ -1290,7 +1239,7 @@ body {
     </div>
     <div class="card">
       <div class="card-header"><div class="card-title">✏️ 今日随笔</div><span style="font-size:12px;color:var(--primary);font-weight:600">B 加粗</span></div>
-      <textarea class="journal-textarea" placeholder="在这里记录今日工作事项、客户反馈、市场信息..."></textarea>
+      <textarea class="journal-textarea" id="journalText" placeholder="在这里记录今日工作事项、客户反馈、市场信息..."></textarea>
       <div class="journal-mood">
         <button class="mood-btn selected" onclick="selectMood(this)">😊 平静</button>
         <button class="mood-btn" onclick="selectMood(this)">🔥 开心</button>
@@ -1298,19 +1247,19 @@ body {
         <button class="mood-btn" onclick="selectMood(this)">💡 迷茫</button>
       </div>
       <div style="display:flex;gap:8px">
-        <input type="date" value="2026-08-03" style="flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:10px;font-size:14px">
-        <button class="btn-primary" style="border-radius:10px">保存</button>
+        <input type="date" id="logDate" style="flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:10px;font-size:14px">
+        <button class="btn-primary" style="border-radius:10px" onclick="saveJournal()">保存</button>
       </div>
       <p style="font-size:11px;color:var(--text-light);margin-top:8px">保存随笔将自动记入当日工作日志</p>
     </div>
     <div class="section-label">📁 过往记录</div>
-    <div class="card"><div class="empty-state"><div class="icon">📒</div><p>写下今日的收获与复盘。<br>在这里记录工作事项、客户反馈，<br>不必刻意长篇大论。</p></div></div>
+    <div class="card" id="journalList"><div class="empty-state"><div class="icon">📒</div><p>写下今日的收获与复盘。<br>在这里记录工作事项、客户反馈，<br>不必刻意长篇大论。</p></div></div>
   </div>
 </div>
 
 <!-- ========== 作息习惯 HUB ========== -->
 <div class="page" id="page-routine">
-  <div class="page-header"><div><div class="page-title">作息习惯</div><div class="page-subtitle">早睡 · 早起 · 戒烟 · 体重 全面管理</div></div><button class="badge-btn">设置</button></div>
+  <div class="page-header"><div><div class="page-title">作息习惯</div><div class="page-subtitle">早睡 · 早起 · 戒烟 · 体重 全面管理</div></div><button class="badge-btn" onclick="openRoutineSettings()">设置</button></div>
 
   <div class="subtabs">
     <button class="subtab active" onclick="switchSub('rt',this,'rt-sleep')">早睡</button>
@@ -1323,10 +1272,10 @@ body {
   <div class="subtab-content active" id="rt-sleep">
     <div class="hero-banner" style="background:linear-gradient(135deg,#5B6CF9,#8B5CF6)">
       <div class="greeting">🌙 该准备休息啦</div>
-      <div class="main-text">距离 23:30 睡觉</div>
-      <div class="sub-text">还有 10 小时 0 分</div>
+      <div class="main-text" id="sleepHeroMain">距离就寝</div>
+      <div class="sub-text" id="sleepHeroSub">--</div>
       <div class="countdown-box" style="position:absolute;right:16px;top:50%;transform:translateY(-50%)">
-        <div class="countdown-num" style="color:white">10:00</div>
+        <div class="countdown-num" style="color:white" id="sleepHeroNum">--:--</div>
         <div class="countdown-label" style="color:white;opacity:.8">倒计时</div>
       </div>
     </div>
@@ -1351,18 +1300,18 @@ body {
       <div class="form-group"><label>今日备注（选填）</label><textarea id="sleepNote" placeholder="今天状态怎么样？" rows="2" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;resize:none"></textarea></div>
       <button class="btn-primary" style="width:100%" onclick="saveSleep()">标记已早睡</button>
     </div>
-    <div class="section-label">📊 睡眠分析</div>
-    <div class="card"><div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px"><button class="filter-tab active">按周</button><button class="filter-tab">按月</button></div><div class="perf-chart-placeholder" style="height:160px">📈 入睡时间趋势图</div></div>
+    <div class="section-label">📊 睡眠分析（近期入睡时间）</div>
+    <div class="card"><div id="sleepChart" style="min-height:110px"></div></div>
   </div>
 
   <!-- 早起 -->
   <div class="subtab-content" id="rt-rise">
     <div class="hero-banner" style="background:linear-gradient(135deg,#FA8C16,#FA541C)">
       <div class="greeting">🌅 早起的鸟儿有虫吃</div>
-      <div class="main-text">今日起床目标</div>
-      <div class="sub-text">计划 06:30 起床</div>
+      <div class="main-text" id="riseHeroMain">今日起床目标</div>
+      <div class="sub-text" id="riseHeroSub">计划 -- 起床</div>
       <div class="countdown-box" style="position:absolute;right:16px;top:50%;transform:translateY(-50%)">
-        <div class="countdown-num" style="color:white">06:30</div>
+        <div class="countdown-num" style="color:white" id="riseHeroNum">--:--</div>
         <div class="countdown-label" style="color:white;opacity:.8">起床时间</div>
       </div>
     </div>
@@ -1381,19 +1330,21 @@ body {
         <div class="form-group"><label>日期</label><input type="date" id="riseDate"></div>
       </div>
       <div class="form-group"><label>是否达标（早于 07:00）</label><select id="riseOk"><option value="1">达标 ✓</option><option value="0">未达标</option></select></div>
-      <div class="form-group"><label>今日备注（选填）</label><textarea id="riseNote" placeholder="早起做了什么？" rows="2" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;resize:none"></textarea></div>
+      <div class="form-group"><label>今日备注（选填）</label><textarea id="riseNote" placeholder="早起做了什么？" rows="2" style="width:100%;padding:10px;border:..1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;resize:none"></textarea></div>
       <button class="btn-primary" style="width:100%" onclick="saveRise()">标记已早起</button>
     </div>
+    <div class="section-label">📊 早起分析（近期起床时间）</div>
+    <div class="card"><div id="riseChart" style="min-height:110px"></div></div>
   </div>
 
   <!-- 戒烟 -->
   <div class="subtab-content" id="rt-smoke">
     <div class="hero-banner" style="background:linear-gradient(135deg,#52C41A,#13C2C2)">
       <div class="greeting">🚭 坚持就是胜利</div>
-      <div class="main-text">已戒烟</div>
-      <div class="sub-text">戒烟第 86 天</div>
+      <div class="main-text" id="smokeHeroMain">已戒烟</div>
+      <div class="sub-text" id="smokeHeroDays">戒烟第 0 天</div>
       <div class="countdown-box" style="position:absolute;right:16px;top:50%;transform:translateY(-50%)">
-        <div class="countdown-num" style="color:white">86</div>
+        <div class="countdown-num" style="color:white" id="smokeHeroNum">0</div>
         <div class="countdown-label" style="color:white;opacity:.8">天数</div>
       </div>
     </div>
@@ -1401,13 +1352,13 @@ body {
       <div class="ss-item"><div class="ss-num green" id="rtSmokeDays">0</div><div class="ss-label">坚持(天)</div></div>
       <div class="ss-item"><div class="ss-num blue" id="rtSmokeNot">0</div><div class="ss-label">未吸(支)</div></div>
       <div class="ss-item"><div class="ss-num orange" id="rtSmokeSave">¥0</div><div class="ss-label">省下(元)</div></div>
-      <div class="ss-item"><div class="ss-num purple">14%</div><div class="ss-label">肺功恢复</div></div>
+      <div class="ss-item"><div class="ss-num purple" id="rtSmokeStreak">0</div><div class="ss-label">连续(天)</div></div>
     </div>
-    <div class="section-label">🎯 戒烟目标</div>
+    <div class="section-label">🎯 戒烟目标（<span id="smokeGoalDays">365</span> 天）</div>
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:14px;font-weight:600">永久戒除</span><span style="font-size:13px;color:var(--success)">进行中</span></div>
-      <div class="mini-bar" style="height:10px"><div class="mini-bar-fill" style="width:62%;background:var(--success)"></div></div>
-      <div style="font-size:11px;color:var(--text-light);margin-top:6px">距目标里程碑 100 天还有 14 天，加油！🚭</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:14px;font-weight:600">距离目标</span><span style="font-size:13px;color:var(--success)" id="smokeGoalPct">0%</span></div>
+      <div class="mini-bar" style="height:10px"><div class="mini-bar-fill" id="smokeGoalBar" style="width:0%;background:var(--success)"></div></div>
+      <div style="font-size:11px;color:var(--text-light);margin-top:6px" id="smokeGoalText">在「设置」里填写戒烟开始日期即可开始统计 🚭</div>
     </div>
     <div class="section-label">✏️ 今日打卡</div>
     <div class="card visit-form">
@@ -1419,38 +1370,31 @@ body {
       <div class="form-group"><label>今日备注（选填）</label><textarea id="smokeNote" placeholder="如何转移的注意力？" rows="2" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;resize:none"></textarea></div>
       <button class="btn-primary" style="width:100%" onclick="saveSmoke()">打卡</button>
     </div>
-    <div class="section-label">📊 戒烟收益</div>
-    <div class="card"><div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px"><button class="filter-tab active">按周</button><button class="filter-tab">按月</button></div><div class="perf-chart-placeholder" style="height:160px">📈 累计省钱 / 未吸烟支数</div></div>
+    <div class="section-label">📋 打卡记录 <span id="smokeListTitle" style="font-weight:400;color:var(--text-light)"></span></div>
+    <div class="card" style="padding:0" id="smokeList"></div>
+    <div class="section-label">📊 戒烟收益（累计省下）</div>
+    <div class="card" id="smokeChart"></div>
   </div>
 
   <!-- 体重 -->
   <div class="subtab-content" id="rt-weight">
     <div class="hero-banner" style="background:linear-gradient(135deg,#EB2F96,#F759AB)">
       <div class="greeting">⚖️ 健康体重管理</div>
-      <div class="main-text">当前体重</div>
-      <div class="sub-text">72.5 kg · 目标 70 kg</div>
+      <div class="main-text" id="weightHeroMain">当前体重</div>
+      <div class="sub-text" id="weightHeroSub">-- kg · 目标 -- kg</div>
       <div class="countdown-box" style="position:absolute;right:16px;top:50%;transform:translateY(-50%)">
-        <div class="countdown-num" style="color:white">72.5</div>
+        <div class="countdown-num" style="color:white" id="weightHeroNum">--</div>
         <div class="countdown-label" style="color:white;opacity:.8">kg</div>
       </div>
     </div>
     <div class="study-stats">
-      <div class="ss-item"><div class="ss-num green" id="rtWeightDelta">-- kg</div><div class="ss-label">本月(kg)</div></div>
+      <div class="ss-item"><div class="ss-num green" id="rtWeightDelta">-- kg</div><div class="ss-label">较目标(kg)</div></div>
       <div class="ss-item"><div class="ss-num blue" id="rtWeightCur">--</div><div class="ss-label">当前(kg)</div></div>
       <div class="ss-item"><div class="ss-num orange" id="rtWeightBmi">--</div><div class="ss-label">BMI</div></div>
       <div class="ss-item"><div class="ss-num purple" id="rtWeightDays">0</div><div class="ss-label">打卡(天)</div></div>
     </div>
-    <div class="section-label">📈 体重趋势</div>
-    <div class="card">
-      <div style="display:flex;align-items:flex-end;gap:4px;height:120px;padding:6px 0">
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;height:70px;background:linear-gradient(to top,#EB2F96,#F759AB);border-radius:4px 4px 0 0"></div><span style="font-size:9px;color:var(--text-light)">16</span></div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;height:66px;background:linear-gradient(to top,#EB2F96,#F759AB);border-radius:4px 4px 0 0"></div><span style="font-size:9px;color:var(--text-light)">20</span></div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;height:60px;background:linear-gradient(to top,#EB2F96,#F759AB);border-radius:4px 4px 0 0"></div><span style="font-size:9px;color:var(--text-light)">24</span></div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;height:56px;background:linear-gradient(to top,#EB2F96,#F759AB);border-radius:4px 4px 0 0"></div><span style="font-size:9px;color:var(--text-light)">28</span></div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;height:54px;background:linear-gradient(to top,#5B6CF9,#8B5FEE);border-radius:4px 4px 0 0"></div><span style="font-size:9px;color:var(--primary);font-weight:600">3</span></div>
-      </div>
-      <div style="text-align:center;font-size:11px;color:var(--text-light)">单位：kg | 近期稳步下降 🎉</div>
-    </div>
+    <div class="section-label">📈 体重趋势（近期记录）</div>
+    <div class="card"><div id="weightChart" style="min-height:120px"></div><div style="text-align:center;font-size:11px;color:var(--text-light);margin-top:4px" id="weightChartNote"></div></div>
     <div class="section-label">✏️ 记录体重</div>
     <div class="card visit-form">
       <div class="form-row">
@@ -1460,8 +1404,35 @@ body {
       <div class="form-group"><label>备注（选填）</label><textarea id="weightNote" placeholder="饮食/运动情况..." rows="2" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;resize:none"></textarea></div>
       <button class="btn-primary" style="width:100%" onclick="saveWeight()">保存</button>
     </div>
+    <div class="section-label">📋 体重记录 <span id="weightListTitle" style="font-weight:400;color:var(--text-light)"></span></div>
+    <div class="card" style="padding:0" id="weightList"></div>
   </div>
 </div>
+
+  <!-- 习惯目标设置 -->
+  <div class="wb-modal" id="routineModal">
+    <div class="modal-card" style="text-align:left">
+      <div class="modal-title" style="text-align:center">⚙️ 习惯目标设置</div>
+      <div style="max-height:64vh;overflow:auto;margin:10px 0">
+        <div style="font-size:13px;font-weight:600;color:var(--text-secondary);margin:10px 0 6px">😴 睡眠 / 早起</div>
+        <div class="modal-form"><label>目标入睡时间</label><input type="time" id="setSleepBed"></div>
+        <div class="modal-form"><label>目标起床时间</label><input type="time" id="setSleepRise"></div>
+        <div class="modal-form"><label>早起达标时间</label><input type="time" id="setRiseTarget"></div>
+        <div style="font-size:13px;font-weight:600;color:var(--text-secondary);margin:10px 0 6px">🚭 戒烟</div>
+        <div class="modal-form"><label>开始戒烟日期</label><input type="date" id="setSmokeQuit"></div>
+        <div class="modal-form"><label>每天吸烟支数</label><input type="number" id="setSmokePerDay" min="0"></div>
+        <div class="modal-form"><label>每支价格(元)</label><input type="number" id="setSmokePrice" step="0.5"></div>
+        <div class="modal-form"><label>目标天数</label><input type="number" id="setSmokeGoal" min="1"></div>
+        <div style="font-size:13px;font-weight:600;color:var(--text-secondary);margin:10px 0 6px">⚖️ 体重</div>
+        <div class="modal-form"><label>身高(cm)</label><input type="number" id="setWeightHeight"></div>
+        <div class="modal-form"><label>目标体重(kg)</label><input type="number" id="setWeightTarget" step="0.1"></div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn-primary" style="flex:1;background:#999" onclick="closeModal('routineModal')">取消</button>
+        <button class="btn-primary" style="flex:1" onclick="saveRoutineSettings()">保存</button>
+      </div>
+    </div>
+  </div>
 
 <!-- ========== 每日英语（英语学习中心） ========== -->
 <div class="page" id="page-english">
@@ -1646,14 +1617,14 @@ body {
       <div class="form-group"><label>学习内容</label><select><option>单词背诵</option><option>阅读文章</option><option>听力练习</option><option>口语打卡</option><option>语法学习</option></select></div>
       <div class="form-row">
         <div class="form-group"><label>学习数量</label><input type="number" placeholder="如 15"></div>
-        <div class="form-group"><label>日期</label><input type="date" value="2026-08-03"></div>
+        <div class="form-group"><label>日期</label><input type="date" id="chkDate"></div>
       </div>
       <div class="form-group"><label>备注（选填）</label><textarea placeholder="今日学习心得..." rows="2" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;resize:none"></textarea></div>
       <button class="btn-primary" style="width:100%" onclick="saveCheckIn()">保存打卡</button>
     </div>
 
     <div class="section-label">📊 学习趋势</div>
-    <div class="card"><div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px"><button class="filter-tab active">按周</button><button class="filter-tab">按月</button></div><div class="perf-chart-placeholder" style="height:160px">📈 每日学习量趋势图</div></div>
+    <div class="card" id="engTrend" style="min-height:160px"></div>
   </div>
 </div>
 
@@ -1736,14 +1707,14 @@ body {
     <div class="fo-item guarantee-fee"><div class="fo-value" style="color:var(--success)" id="moneySaved">¥0</div><div class="fo-label">已存钱</div></div>
   </div>
 
-  <div class="section-label">💰 储蓄目标</div>
-  <div class="card">
+  <div class="section-label">💰 储蓄目标 <span style="font-weight:400;color:var(--primary);cursor:pointer" onclick="openSaveModal()">✎ 管理</span></div>
+  <div class="card" style="cursor:pointer" onclick="openSaveModal()">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
       <span style="font-size:14px;font-weight:600">年度存款目标</span>
       <span style="font-size:13px;color:var(--primary)"><span id="saveCur">¥0</span> / <span id="saveGoal">¥0</span></span>
     </div>
     <div class="mini-bar" style="height:10px"><div class="mini-bar-fill" id="saveBar" style="width:0%;background:var(--success)"></div></div>
-    <div style="font-size:11px;color:var(--text-light);margin-top:6px">已完成 <span id="savePct">0%</span>，继续加油 💪</div>
+    <div style="font-size:11px;color:var(--text-light);margin-top:6px">已完成 <span id="savePct">0%</span>，继续加油 💪（点击查看存钱明细）</div>
   </div>
 
   <div class="section-label">🔎 账单筛选</div>
@@ -1775,6 +1746,7 @@ body {
   </div>
   <div class="wb-modal" id="catModal"></div>
   <div class="wb-modal" id="txnModal"></div>
+  <div class="wb-modal" id="saveModal"></div>
 </div>
 
 <!-- ========== 娱乐 HUB ========== -->
@@ -2084,18 +2056,190 @@ function selectMood(btn) {
   btn.classList.add('selected');
 }
 
-// Client filter (财产险 / 保函)
-function clientFilterType(btn, type) {
-  document.querySelectorAll('#clientFilter .filter-tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-  let visible = 0;
-  document.querySelectorAll('#clientCardList .client-card').forEach(card => {
-    const cardType = card.getAttribute('data-type');
-    if (type === '全部' || cardType === type) { card.style.display = ''; visible++; }
-    else card.style.display = 'none';
-  });
-  document.getElementById('clientEmpty').hidden = visible > 0;
+// ===== 客户中心：统一数据层（新增/删除/筛选/标签/与业绩打通） =====
+var CL_TAGS = ['成交','已报价','考虑','拒绝','加微'];
+var CL_TAG_CLASS = {'成交':'deal','已报价':'quote','考虑':'consider','拒绝':'reject','加微':'wx'};
+var CL_TYPE_COLOR = {'财产险':'linear-gradient(135deg,#1890FF,#40A9FF)','保函':'linear-gradient(135deg,#52C41A,#73D13D)','个人':'linear-gradient(135deg,#EB2F96,#F759AB)'};
+var _clState = {tag:'全部', type:'全部'};
+
+function clKey(){ return 'wb_clients_' + (WB_SESSION||'guest'); }
+function getClients(){
+  var c = _load(clKey(), null);
+  if(c===null){ c = _seedClients(); _save(clKey(), c); }
+  return c;
 }
+function saveClients(c){ _save(clKey(), c); }
+function _seedClients(){
+  return [
+    {id:_uid(), name:'张建国', title:'总经理', company:'万达商业管理有限公司', phone:'138****0011', type:'财产险', tags:['成交','加微'], amount:86000, dealType:'财险', dealStatus:'承保', dealDate:'2026-08-01', note:'企财险续保意向强', date:'2026-08-01'},
+    {id:_uid(), name:'陈芳', title:'财务总监', company:'华为技术有限公司', phone:'139****0022', type:'财产险', tags:['成交'], amount:86000, dealType:'财险', dealStatus:'承保', dealDate:'2026-07-28', note:'企财险年单', date:'2026-07-28'},
+    {id:_uid(), name:'刘洋', title:'个体经营', company:'洋帆货运代理', phone:'137****0033', type:'财产险', tags:['成交'], amount:18500, dealType:'财险', dealStatus:'承保', dealDate:'2026-07-15', note:'货运险', date:'2026-07-15'},
+    {id:_uid(), name:'李明', title:'工程部经理', company:'中国建筑第三工程局', phone:'136****0044', type:'保函', tags:['成交'], amount:5000000, dealType:'保函', dealStatus:'审批中', dealDate:'2026-07-25', fee:18000, note:'投标保函', date:'2026-07-25'},
+    {id:_uid(), name:'周强', title:'项目经理', company:'中铁建设集团', phone:'135****0055', type:'保函', tags:['成交','加微'], amount:8000000, dealType:'保函', dealStatus:'已出具', dealDate:'2026-07-18', fee:20000, note:'履约保函', date:'2026-07-18'},
+    {id:_uid(), name:'王磊', title:'采购主管', company:'中交集团', phone:'134****0066', type:'保函', tags:['已报价'], amount:0, note:'港口扩建保函报价中', date:'2026-07-22'},
+    {id:_uid(), name:'赵敏', title:'行政经理', company:'富力地产', phone:'133****0077', type:'财产险', tags:['考虑'], amount:0, note:'对比几家具企财险方案', date:'2026-07-30'},
+    {id:_uid(), name:'孙浩', title:'老板', company:'宏远贸易', phone:'132****0088', type:'个人', tags:['加微','已报价'], amount:0, note:'加微信，待推货运险', date:'2026-08-02'},
+    {id:_uid(), name:'吴桐', title:'财务', company:'绿地集团', phone:'131****0099', type:'财产险', tags:['拒绝'], amount:0, note:'已选别家', date:'2026-07-20'}
+  ];
+}
+function clientFiltered(list){
+  var kw = ((document.getElementById('clientSearch')||{}).value||'').trim().toLowerCase();
+  return list.filter(function(c){
+    if(_clState.type!=='全部' && c.type!==_clState.type) return false;
+    if(_clState.tag!=='全部' && (c.tags||[]).indexOf(_clState.tag)<0) return false;
+    if(kw){ var hay=(c.name+' '+(c.company||'')+' '+(c.note||'')+' '+c.tags.join(' ')).toLowerCase(); if(hay.indexOf(kw)<0) return false; }
+    return true;
+  });
+}
+function clientTagHTML(c){
+  return (c.tags||[]).map(function(t){ return '<span class="tag '+CL_TAG_CLASS[t]+'">'+t+'</span>'; }).join('');
+}
+function renderClients(){
+  var list = getClients();
+  // 统计
+  var all = list.length;
+  var cnt = {}; CL_TAGS.forEach(function(t){ cnt[t]=0; });
+  list.forEach(function(c){ (c.tags||[]).forEach(function(t){ if(cnt[t]!==undefined) cnt[t]++; }); });
+  setText('csAll', all); setText('csDeal', cnt['成交']||0); setText('csQuote', cnt['已报价']||0); setText('csWx', cnt['加微']||0);
+  var box = document.getElementById('clientCardList'); if(!box) return;
+  var rows = clientFiltered(list);
+  if(rows.length===0){ box.innerHTML=''; var e=document.getElementById('clientEmpty'); if(e) e.hidden=false; return; }
+  var e=document.getElementById('clientEmpty'); if(e) e.hidden=true;
+  box.innerHTML = rows.map(function(c){
+    var avatar = (c.name||'?').slice(0,1);
+    var av = CL_TYPE_COLOR[c.type] ? 'background:'+CL_TYPE_COLOR[c.type] : '';
+    var sub = [c.company||'', (c.tags||[]).indexOf('成交')>=0 && +c.amount ? '¥'+(+c.amount).toLocaleString() : ''].filter(Boolean).join(' · ');
+    return '<div class="client-card" onclick="openClientForm(\''+c.id+'\')">'+
+      '<div class="client-avatar" style="'+av+'">'+esc(avatar)+'</div>'+
+      '<div class="client-info"><div class="client-name">'+esc(c.name)+(c.title?' '+esc(c.title):'')+'</div>'+
+      (sub?'<div class="client-company">'+esc(sub)+'</div>':'')+
+      '<div class="client-tags">'+clientTagHTML(c)+'</div></div>'+
+      '<span class="client-del" onclick="event.stopPropagation();deleteClient(\''+c.id+'\')">🗑</span>'+
+      '<div class="client-action">›</div></div>';
+  }).join('');
+}
+function clientSetTag(btn, tag){
+  if(btn){ document.querySelectorAll('#clientTagFilter .filter-tab').forEach(function(t){t.classList.remove('active');}); btn.classList.add('active'); }
+  _clState.tag = tag; renderClients();
+}
+function clientSetType(btn, type){
+  document.querySelectorAll('#clientTypeFilter .filter-tab').forEach(function(t){t.classList.remove('active');}); btn.classList.add('active');
+  _clState.type = type; renderClients();
+}
+function openClientForm(id){
+  var c = id ? getClients().find(function(x){return x.id===id;}) : null;
+  var isEdit = !!c;
+  c = c || {id:_uid(), name:'', title:'', company:'', phone:'', type:'财产险', tags:[], amount:0, dealType:'财险', dealStatus:'承保', dealDate:_today(), fee:0, note:'', date:_today()};
+  var tagBtns = CL_TAGS.map(function(t){
+    var on = (c.tags||[]).indexOf(t)>=0 ? 'on':'';
+    return '<button type="button" class="tag-toggle '+on+'" onclick="clToggleTag(this,\''+t+'\')" data-tag="'+t+'">'+t+'</button>';
+  }).join('');
+  var html = '<div class="modal-card"><div class="modal-title">'+(isEdit?'✏️ 编辑客户':'➕ 新增客户')+'</div>'+
+    '<div class="modal-form" style="margin-top:12px">'+
+    '<div class="form-row" style="display:flex;gap:10px"><div class="form-group" style="flex:1"><label>姓名</label><input id="clName" value="'+esc(c.name||'')+'"></div>'+
+    '<div class="form-group" style="flex:1"><label>职务</label><input id="clTitle" value="'+esc(c.title||'')+'"></div></div>'+
+    '<div class="form-group"><label>公司</label><input id="clCompany" value="'+esc(c.company||'')+'"></div>'+
+    '<div class="form-row" style="display:flex;gap:10px"><div class="form-group" style="flex:1"><label>电话</label><input id="clPhone" value="'+esc(c.phone||'')+'"></div>'+
+    '<div class="form-group" style="flex:1"><label>类型</label><select id="clType"><option'+(c.type==='财产险'?' selected':'')+'>财产险</option><option'+(c.type==='保函'?' selected':'')+'>保函</option><option'+(c.type==='个人'?' selected':'')+'>个人</option></select></div></div>'+
+    '<div class="form-group"><label>标签（可多选）</label><div id="clTags" style="display:flex;flex-wrap:wrap;gap:8px">'+tagBtns+'</div></div>'+
+    '<div class="form-row" style="display:flex;gap:10px"><div class="form-group" style="flex:1"><label>成交金额(元)</label><input id="clAmount" type="number" value="'+(+c.amount||0)+'"></div>'+
+    '<div class="form-group" style="flex:1"><label>业务类型</label><select id="clDealType"><option'+(c.dealType==='财险'?' selected':'')+'>财险</option><option'+(c.dealType==='其他'?' selected':'')+'>其他</option><option'+(c.dealType==='保函'?' selected':'')+'>保函</option></select></div></div>'+
+    '<div class="form-row" style="display:flex;gap:10px"><div class="form-group" style="flex:1"><label>状态</label><select id="clDealStatus"><option'+(c.dealStatus==='承保'?' selected':'')+'>承保</option><option'+(c.dealStatus==='已出具'?' selected':'')+'>已出具</option><option'+(c.dealStatus==='审批中'?' selected':'')+'>审批中</option><option'+(c.dealStatus==='材料准备'?' selected':'')+'>材料准备</option></select></div>'+
+    '<div class="form-group" style="flex:1"><label>保函手续费(元)</label><input id="clFee" type="number" value="'+(+c.fee||0)+'"></div></div>'+
+    '<div class="form-group"><label>日期</label><input id="clDealDate" type="date" value="'+(c.dealDate||c.date||_today())+'"></div>'+
+    '<div class="form-group"><label>备注</label><textarea id="clNote" rows="2">'+esc(c.note||'')+'</textarea></div>'+
+    '</div>'+
+    '<div style="display:flex;gap:8px;margin-top:14px">'+
+      (isEdit?'<button class="btn-primary" style="flex:1;background:#ff4d4f" onclick="deleteClient(\''+c.id+'\');closeModal(\'clientModal\')">删除</button>':'')+
+      '<button class="btn-primary" style="flex:1" onclick="saveClient(\''+c.id+'\','+isEdit+')">保存</button>'+
+      '<button class="btn-primary" style="flex:1;background:#999" onclick="closeModal(\'clientModal\')">取消</button>'+
+    '</div></div>';
+  var m=document.getElementById('clientModal'); m.innerHTML=html; m.style.display='flex';
+  m.onclick=function(e){ if(e.target===m) closeModal('clientModal'); };
+}
+function clToggleTag(btn, tag){ btn.classList.toggle('on'); }
+function saveClient(id, isEdit){
+  var name=(document.getElementById('clName')||{}).value||'';
+  if(!name.trim()){ toast('请输入客户姓名'); return; }
+  var tags=[]; document.querySelectorAll('#clTags .tag-toggle.on').forEach(function(b){ tags.push(b.getAttribute('data-tag')); });
+  var c={
+    id:id, name:name.trim(), title:(document.getElementById('clTitle')||{}).value||'',
+    company:(document.getElementById('clCompany')||{}).value||'', phone:(document.getElementById('clPhone')||{}).value||'',
+    type:(document.getElementById('clType')||{}).value||'财产险', tags:tags,
+    amount:parseFloat((document.getElementById('clAmount')||{}).value)||0,
+    dealType:(document.getElementById('clDealType')||{}).value||'财险',
+    dealStatus:(document.getElementById('clDealStatus')||{}).value||'承保',
+    fee:parseFloat((document.getElementById('clFee')||{}).value)||0,
+    dealDate:(document.getElementById('clDealDate')||{}).value||_today(),
+    note:(document.getElementById('clNote')||{}).value||'', date:_today()
+  };
+  var list=getClients();
+  if(isEdit){ var i=list.findIndex(function(x){return x.id===id;}); if(i>=0) list[i]=c; }
+  else list.unshift(c);
+  saveClients(list); closeModal('clientModal'); renderClients(); syncClientToPerf(c); renderPerformance(); renderHome();
+  toast(isEdit?'已更新':'已新增客户');
+}
+function deleteClient(id){
+  var list=getClients(); var c=list.find(function(x){return x.id===id;}); if(!c) return;
+  if(!confirm('确定删除客户「'+(c.name||'')+'」？相关业绩记录也会一并移除。')) return;
+  list = list.filter(function(x){return x.id!==id;});
+  saveClients(list); renderClients(); syncClientToPerf(c, true); renderPerformance(); renderHome();
+  toast('已删除');
+}
+// ----- 客户 → 业绩 打通 -----
+function syncClientToPerf(c, forceRemove){
+  if(!WB_SESSION) return;
+  var d=getPerf(); if(!d) return;
+  // 移除该客户名下的旧业绩记录
+  d.records = d.records.filter(function(r){ return (r.client||'') !== (c.name||''); });
+  if(!forceRemove && (c.tags||[]).indexOf('成交')>=0 && (+c.amount>0 || (c.dealType==='保函'))){
+    d.records.push({ id:'pf_'+c.id, type:c.dealType||'财险', name:(c.note&&c.note.indexOf('保函')>=0?c.note:c.dealType==='保函'?'保函业务':(c.company||c.name)+' '+(c.dealType==='保函'?'保函':c.dealType==='其他'?'其他':'企财险')), client:c.name, premium:(+c.amount||0), fee:(+c.fee||0), status:c.dealStatus||'承保', date:c.dealDate||c.date||_today() });
+  }
+  savePerf(d);
+}
+function syncAllClientsToPerf(){
+  var list=getClients();
+  // 清空由客户生成的记录（保留非客户来源：如“佣金到账/续保奖励”等手动收入，其 client 为空）
+  var d=getPerf(); if(!d) return;
+  d.records = d.records.filter(function(r){ return !(r.id && String(r.id).indexOf('pf_')===0); });
+  list.forEach(function(c){ if((c.tags||[]).indexOf('成交')>=0) syncClientToPerf(c); });
+  savePerf(d);
+}
+// ----- 保单 / 保函 子页（由成交客户派生） -----
+function renderPolicy(){
+  // 财产险成交（类型=财产险 或 业务类型=财险/其他）
+  var list=getClients().filter(function(c){ return (c.tags||[]).indexOf('成交')>=0 && (c.type==='财产险'||c.dealType==='财险'||c.dealType==='其他'); });
+  var box=document.getElementById('policyList'); if(!box) return;
+  var valid=list.filter(function(c){ return PERF_ISSUED.indexOf(c.dealStatus)>=0; });
+  var premium=valid.reduce(function(s,c){return s+(+c.amount||0);},0);
+  var renew=list.filter(function(c){ return (c.tags||[]).indexOf('待续保')>=0 || (c.note||'').indexOf('续保')>=0; }).length;
+  setText('psValid', valid.length); setText('psPremium', '¥'+premium.toLocaleString()); setText('psRenew', renew);
+  // 即将到期：状态含“审批”或日期较早（演示用：有备注含到期则算）
+  var expiring=list.filter(function(c){ return (c.dealStatus==='审批中'||c.dealStatus==='材料准备'); }).length;
+  setText('psExpiring', expiring);
+  box.innerHTML = list.length ? list.map(function(c){
+    return '<div class="policy-item" onclick="openClientForm(\''+c.id+'\')"><div class="policy-icon" style="background:#E6F7FF">🏢</div>'+
+      '<div class="policy-detail"><div class="policy-name">'+(c.dealType==='其他'?'企财险续保':(c.dealType==='财险'?'企业财产险':'财产险'))+'</div><div class="policy-client">'+(c.company||c.name)+' · '+esc(c.name)+(c.title?' '+c.title:'')+'</div></div>'+
+      '<div class="policy-extra"><div class="policy-premium">¥'+(+c.amount||0).toLocaleString()+'</div><div class="policy-date" style="color:'+(PERF_ISSUED.indexOf(c.dealStatus)>=0?'var(--success)':'var(--warning)')+'">'+(c.dealStatus||'承保')+'</div></div></div>';
+  }).join('') : '<div class="empty-state"><div class="icon">📭</div><p>暂无成交的财产险客户</p></div>';
+}
+function renderGuarantee(){
+  var list=getClients().filter(function(c){ return (c.tags||[]).indexOf('成交')>=0 && c.dealType==='保函'; });
+  var box=document.getElementById('guaranteeList'); if(!box) return;
+  var types={}; list.forEach(function(c){ var n=c.note&&c.note.indexOf('保函')>=0?c.note:'保函业务'; types[n]=(types[n]||0)+1; });
+  var gt=document.getElementById('gtTypes');
+  if(gt) gt.innerHTML=Object.keys(types).length?Object.keys(types).map(function(k,i){ return '<div class="gt-item"><div class="gt-icon">'+(['📝','🤝','💳'][i%3])+'</div><div class="gt-name">'+esc(k)+'</div><div class="gt-count">'+types[k]+'</div></div>'; }).join('') : '<div class="gt-item"><div class="gt-icon">📝</div><div class="gt-name">保函</div><div class="gt-count">0</div></div>';
+  var bal=list.reduce(function(s,c){return s+(+c.amount||0);},0);
+  var fee=list.reduce(function(s,c){return s+(+c.fee||0);},0);
+  setText('gtBalance','¥'+bal.toLocaleString()); setText('gtFee','¥'+fee.toLocaleString());
+  box.innerHTML = list.length ? list.map(function(c){
+    var stColor = c.dealStatus==='已出具'?'var(--success)':c.dealStatus==='审批中'?'var(--primary)':'var(--warning)';
+    return '<div class="policy-item" onclick="openClientForm(\''+c.id+'\')"><div class="policy-icon" style="background:#F6FFED">📜</div>'+
+      '<div class="policy-detail"><div class="policy-name">'+esc(c.note&&c.note.indexOf('保函')>=0?c.note:'保函业务')+'</div><div class="policy-client">'+(c.company||c.name)+' · '+esc(c.name)+'</div></div>'+
+      '<div class="policy-extra"><div class="policy-premium" style="color:var(--primary)">¥'+(+c.amount||0).toLocaleString()+'</div><span class="g-status '+(c.dealStatus==='已出具'?'done':c.dealStatus==='审批中'?'processing':'pending')+'">'+(c.dealStatus||'材料准备')+'</span></div></div>';
+  }).join('') : '<div class="empty-state"><div class="icon">📜</div><p>暂无成交的保函客户</p></div>';
+}
+function renderClientHub(){ renderClients(); renderPolicy(); renderGuarantee(); }
 
 // Fun filter / toggle 已由下方动态数据层统一实现（见「娱乐」章节）
 
@@ -2532,9 +2676,25 @@ function renderEngCheck(){
     });
     paintCal('chkHeat','eng', new Set(pad));
   }
+  renderEngTrend();
+}
+function renderEngTrend(){
+  var box=document.getElementById('engTrend'); if(!box) return;
+  var ds=engState.studyDates||[];
+  if(!ds.length){ box.innerHTML='<div class="empty-state"><p>开始背单词后查看学习趋势</p></div>'; return; }
+  var now=new Date(); var months=[];
+  for(var i=5;i>=0;i--) months.push(new Date(now.getFullYear(), now.getMonth()-i, 1));
+  var sums=months.map(function(dt){ var ym=dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0'); return ds.filter(function(s){return (s||'').slice(0,7)===ym;}).length; });
+  var max=Math.max.apply(null,sums)||1;
+  var html=sums.map(function(v,i){ var dt=months[i]; var isCur=(dt.getFullYear()===now.getFullYear()&&dt.getMonth()===now.getMonth()); var bh=Math.round(v/max*140)+(v>0?6:2);
+    return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:'+bh+'px;background:linear-gradient(to top,'+(isCur?'#52C41A':'#13C2C2')+',#5ED8D8);border-radius:4px 4px 0 0"></div><span style="font-size:10px;color:'+(isCur?'var(--success)':'var(--text-light)')+'">'+(dt.getMonth()+1)+'月</span></div>';
+  }).join('');
+  box.innerHTML='<div style="height:150px;display:flex;align-items:end;gap:6px;padding:10px 0">'+html+'</div><div style="text-align:center;font-size:11px;color:var(--text-light);padding-top:8px">单位：学习天数 | 累计学习 '+ds.length+' 天</div>';
 }
 function saveCheckIn(){
   engEnsureToday();
+  const chkDateVal=(document.getElementById('chkDate')&&document.getElementById('chkDate').value)||'';
+  if(chkDateVal) engState.todayDate=chkDateVal;
   const qty=parseInt((document.querySelector('#en-check input[type=number]')||{}).value||'0',10);
   if(qty>0){
     engState.todayLearned += qty;
@@ -2573,7 +2733,7 @@ document.getElementById('mainContent').addEventListener('click', function(e) {
 /* ===================== 多账户 / 分账户存档 ===================== */
 const WB_MAIN = document.getElementById('mainContent');
 const WB_DEFAULT = WB_MAIN.innerHTML;          // 初始演示数据（新账户基线）
-const WB_VERSION = 15;                          // 结构版本：改 HTML 结构后递增，旧快照自动失效
+const WB_VERSION = 18;                          // 结构版本：改 HTML 结构后递增，旧快照自动失效（全站写死审计+清零：业绩分解动态副标题、首页今日重点动态聚合、日期输入生效、工作日志可保存）
 let WB_SESSION = localStorage.getItem('wb_session') || '';
 let WB_MODE = 'login';
 
@@ -3001,15 +3161,66 @@ function showCatDetail(cat){
   modal.onclick=function(e){ if(e.target===modal) closeModal('catModal'); };
 }
 function deleteTrans(id){
-  var m=getMoney(); m.transactions=m.transactions.filter(function(t){return t.id!==id;}); saveMoney(m); renderMoney();
+  var m=getMoney();
+  var t=m.transactions.find(function(x){return x.id===id;});
+  if(t && t.cat==='存钱'){ m.saved=Math.max(0,(+m.saved||0)-(+t.amount||0)); }
+  m.transactions=m.transactions.filter(function(t){return t.id!==id;}); saveMoney(m); renderMoney();
   var cm=document.getElementById('catModal');
   if(cm && cm.style.display==='flex' && _curCat) showCatDetail(_curCat);
   toast('已删除');
 }
 function closeModal(id){ var e=document.getElementById(id); if(e) e.style.display='none'; }
+// 储蓄目标管理：编辑目标 + 存钱明细（增/删）
+function openSaveModal(){
+  var m=getMoney();
+  var deposits=m.transactions.filter(function(t){return t.cat==='存钱';})
+    .sort(function(a,b){return (b.date||'').localeCompare(a.date||'');});
+  var rows = deposits.length ? deposits.map(function(t){
+    return '<div class="list-item" style="cursor:default"><div class="li-icon" style="background:#E8F0FE">🏦</div>'+
+      '<div class="li-info" style="flex:1"><div class="li-title">+'+(+t.amount||0).toLocaleString()+'</div><div class="li-sub">'+esc(t.date||'')+(t.note?' · '+esc(t.note):'')+'</div></div>'+
+      '<span class="li-del" onclick="deleteDeposit(\''+t.id+'\')">🗑</span></div>';
+  }).join('') : '<div class="empty-state"><div class="icon">🏦</div><p>还没有存钱记录，存第一笔吧</p></div>';
+  var html='<div class="modal-card"><div class="modal-title">💰 储蓄管理</div>'+
+    '<div class="modal-form" style="margin-top:12px">'+
+    '<div class="form-row" style="display:flex;gap:10px"><div class="form-group" style="flex:1"><label>已存钱(元)</label><input id="saveCurInput" type="number" value="'+(+m.saved||0)+'"></div>'+
+    '<div class="form-group" style="flex:1"><label>年度目标(元)</label><input id="saveGoalInput" type="number" value="'+(+m.saveGoal||0)+'"></div></div>'+
+    '<div class="form-group"><label>快速存入一笔</label>'+
+      '<div style="display:flex;gap:8px"><input id="depAmount" type="number" placeholder="金额" style="flex:1;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;outline:none">'+
+      '<input id="depDate" type="date" value="'+_today()+'" style="padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;outline:none">'+
+      '<button class="btn-primary" style="white-space:nowrap;padding:0 14px" onclick="addDeposit()">存入</button></div></div>'+
+    '<div class="form-group"><label>存钱明细（'+deposits.length+' 笔）</label><div style="max-height:34vh;overflow:auto">'+rows+'</div></div>'+
+    '</div>'+
+    '<div style="display:flex;gap:8px;margin-top:8px"><button class="btn-primary" style="flex:1" onclick="saveSaveGoal()">保存目标</button>'+
+    '<button class="btn-primary" style="flex:1;background:#999" onclick="closeModal(\'saveModal\')">关闭</button></div></div>';
+  var mod=document.getElementById('saveModal'); mod.innerHTML=html; mod.style.display='flex';
+  mod.onclick=function(e){ if(e.target===mod) closeModal('saveModal'); };
+}
+function saveSaveGoal(){
+  var m=getMoney();
+  var goal=parseFloat((document.getElementById('saveGoalInput')||{}).value)||0;
+  var cur=parseFloat((document.getElementById('saveCurInput')||{}).value)||0;
+  m.saveGoal=goal; m.saved=cur; saveMoney(m); renderMoney();
+  toast('已更新储蓄目标');
+}
+function addDeposit(){
+  var amt=parseFloat((document.getElementById('depAmount')||{}).value)||0;
+  if(!amt){ toast('请输入存入金额'); return; }
+  var date=(document.getElementById('depDate')||{}).value||_today();
+  var m=getMoney();
+  m.transactions.unshift({id:_uid(),type:'expense',cat:'存钱',amount:amt,note:'存入',date:date});
+  m.saved=(+m.saved||0)+amt; saveMoney(m); renderMoney(); openSaveModal();
+  toast('已存入 '+amt);
+}
+function deleteDeposit(id){
+  var m=getMoney();
+  var t=m.transactions.find(function(x){return x.id===id;});
+  if(t && t.cat==='存钱'){ m.saved=Math.max(0,(+m.saved||0)-(+t.amount||0)); }
+  m.transactions=m.transactions.filter(function(x){return x.id!==id;});
+  saveMoney(m); renderMoney(); openSaveModal();
+}
 
 /* ---------- 作息 / 健身 数据层 ---------- */
-function getRoutine(){ var r=_load('routine',null); if(r===null){ r={ sleep:{targetBed:'23:30',targetRise:'06:30',dur:7.5,log:{}}, rise:{target:'06:30',log:{}}, smoke:{quitDate:'2026-05-10',price:24,perDay:20,log:{}}, weight:{height:175,target:70,log:{}} }; _save('routine',r); } return r; }
+function getRoutine(){ var r=_load('routine',null); if(r===null){ r={ sleep:{targetBed:'23:30',targetRise:'06:30',dur:7.5,log:{}}, rise:{target:'06:30',log:{}}, smoke:{quitDate:'2026-05-10',price:24,perDay:20,goal:365,log:{}}, weight:{height:175,target:70,log:{}} }; _save('routine',r); } return r; }
 function saveRoutine(r){ _save('routine',r); }
 function getFit(){ var f=_load('fit',null); if(f===null){ f={log:{}}; _save('fit',f); } return f; }
 function saveFit(f){ _save('fit',f); }
@@ -3126,38 +3337,64 @@ function renderRoutine(){
   var r=getRoutine();
   // 睡眠
   var slog=Object.keys(r.sleep.log);
-  var sStreak=streakCount(Object.keys(r.sleep.log));
+  var sStreak=streakCount(slog);
   var sThisWeek=weekCount(r.sleep.log);
   var durs=Object.values(r.sleep.log).map(function(x){return +x.dur||0;}).filter(function(x){return x>0;});
   var avgDur=durs.length? (durs.reduce(function(a,b){return a+b;},0)/durs.length).toFixed(1):'--';
   var beds=Object.values(r.sleep.log).map(function(x){return x.bed;}).filter(Boolean);
-  var avgBed=beds.length? beds[beds.length-1] : '23:30';
+  var avgBed=beds.length? beds[beds.length-1] : (r.sleep.targetBed||'23:30');
   setText('rtSleepStreak', sStreak); setText('rtSleepWeek', sThisWeek+'/7'); setText('rtSleepAvg', avgDur+'h'); setText('rtSleepBed', avgBed);
   paintCal('rtSleepCal','sleep', new Set(slog));
+  renderSleepChart(r);
+  // 睡眠 hero（倒计时到目标入睡时间）
+  var tb=r.sleep.targetBed||'23:30';
+  setText('sleepHeroMain','距离 '+tb+' 睡觉');
+  var scd=sleepCountdown(tb); setText('sleepHeroSub', scd.sub); setText('sleepHeroNum', scd.num);
   // 早起
   var rStreak=streakCount(Object.keys(r.rise.log));
   var rThisWeek=weekCount(r.rise.log);
   var rises=Object.values(r.rise.log).map(function(x){return x.time;}).filter(Boolean);
-  var avgRise=rises.length? rises[rises.length-1] : '06:30';
+  var avgRise=rises.length? rises[rises.length-1] : (r.rise.target||'06:30');
   setText('rtRiseStreak', rStreak); setText('rtRiseWeek', rThisWeek+'/7'); setText('rtRiseAvg', avgRise);
   setText('rtRiseMonth', Object.keys(r.rise.log).length);
   paintCal('rtRiseCal','rise', new Set(Object.keys(r.rise.log)));
+  renderRiseChart(r);
+  // 早起 hero
+  var rt=r.rise.target||'06:30';
+  setText('riseHeroMain','今日起床目标'); setText('riseHeroSub','计划 '+rt+' 起床'); setText('riseHeroNum', rt);
   // 戒烟
-  var sd=r.smoke.quitDate? new Date(r.smoke.quitDate):null;
+  var sd=r.smoke.quitDate? new Date(r.smoke.quitDate+'T00:00:00'):null;
   var days = sd? Math.max(0, Math.round((new Date()-sd)/86400000)) : 0;
   setText('rtSmokeDays', days);
   setText('rtSmokeNot', days*(r.smoke.perDay||20));
   setText('rtSmokeSave', '¥'+((days*(r.smoke.perDay||20)*(r.smoke.price||24))).toLocaleString());
+  // 连续未吸烟
+  var smokeStreak=0; var sd2=new Date();
+  if(!(r.smoke.log[_today()] && r.smoke.log[_today()].smoked)) sd2.setDate(sd2.getDate()-1);
+  while(r.smoke.log[_ymd(sd2.getFullYear(),sd2.getMonth(),sd2.getDate())] && !r.smoke.log[_ymd(sd2.getFullYear(),sd2.getMonth(),sd2.getDate())].smoked){ smokeStreak++; sd2.setDate(sd2.getDate()-1); }
+  setText('rtSmokeStreak', smokeStreak);
+  // 戒烟 hero + 目标
+  setText('smokeHeroNum', days); setText('smokeHeroDays', '戒烟第 '+days+' 天');
+  var goal=r.smoke.goal||365;
+  setText('smokeGoalDays', goal);
+  var gp=Math.min(100, Math.round(days/goal*100));
+  setText('smokeGoalPct', gp+'%');
+  var ge=document.getElementById('smokeGoalBar'); if(ge) ge.style.width=gp+'%';
+  var left=Math.max(0, goal-days);
+  setText('smokeGoalText', left>0? ('距目标 '+goal+' 天还有 '+left+' 天，加油！🚭') : '🎉 已达成 '+goal+' 天戒烟目标！');
+  renderSmokeList(r); renderSmokeChart(r, days);
   // 体重
   var wkeys=Object.keys(r.weight.log).sort();
   var cur = wkeys.length? r.weight.log[wkeys[wkeys.length-1]].kg : null;
-  var firstM = Object.keys(r.weight.log).filter(function(k){return _monthKey(k)===_monthKey(_today());}).sort()[0];
-  var monthDelta = (firstM && cur!=null)? (cur - r.weight.log[firstM].kg).toFixed(1) : '--';
   var bmi = (cur && r.weight.height)? (cur/((r.weight.height/100)*(r.weight.height/100))).toFixed(1) : '';
   setText('rtWeightCur', cur!=null? cur+' kg':'--');
-  setText('rtWeightDelta', (monthDelta==='--'?'':(monthDelta>0?'+':'')+monthDelta)+' kg');
+  var delta = (cur!=null && r.weight.target)? (cur - r.weight.target).toFixed(1) : '--';
+  setText('rtWeightDelta', (delta==='--'?'':(delta>0?'+':'')+delta)+' kg');
   setText('rtWeightBmi', bmi);
   setText('rtWeightDays', wkeys.length);
+  setText('weightHeroNum', cur!=null? cur : '--');
+  setText('weightHeroSub', (cur!=null? cur+' kg':'--')+' · 目标 '+(r.weight.target||'--')+' kg');
+  renderWeightChart(r); renderWeightList(r);
 }
 function paintCal(elId,prefix,marked){
   var el=document.getElementById(elId); if(!el) return;
@@ -3199,6 +3436,128 @@ function saveWeight(){
   saveRoutine(r); renderRoutine(); toast('已记录体重');
 }
 
+/* ---------- 作息：图表 / 列表 / 设置 ---------- */
+function sleepCountdown(tb){
+  var parts=(tb||'23:30').split(':'); var th=+parts[0], tm=+parts[1];
+  var now=new Date(); var target=new Date(now); target.setHours(th,tm,0,0);
+  if(target<=now) target.setDate(target.getDate()+1);
+  var diff=Math.max(0,target-now); var h=Math.floor(diff/3600000), m=Math.floor((diff%3600000)/60000);
+  return { num:(h<10?'0':'')+h+':'+(m<10?'0':'')+m, sub:'还有 '+h+' 小时 '+m+' 分' };
+}
+function sparkline(vals, o){
+  o=o||{}; var w=o.w||300, h=o.h||120, color=o.color||'#5B6CF9', fill=o.fill||'rgba(91,108,249,.12)';
+  if(!vals||!vals.length) return '';
+  var max=Math.max.apply(null,vals), min=Math.min.apply(null,vals);
+  var span=(max-min)||1; var n=vals.length;
+  var pts=vals.map(function(v,i){ var x=n>1?(i/(n-1))*(w-8)+4:w/2; var y=h-8-((v-min)/span)*(h-18); return x.toFixed(1)+','+y.toFixed(1); });
+  var line='M'+pts.join(' L');
+  var area=line+' L'+(w-4)+','+(h-6)+' L4,'+(h-6)+' Z';
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="100%" height="'+h+'" preserveAspectRatio="none">'+
+    '<path d="'+area+'" fill="'+fill+'"/>'+
+    '<path d="'+line+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>';
+}
+function renderSleepChart(r){
+  var box=document.getElementById('sleepChart'); if(!box) return;
+  var keys=Object.keys(r.sleep.log).sort().slice(-14);
+  if(!keys.length){ box.innerHTML='<div class="empty-state"><p>记录睡眠后查看趋势</p></div>'; return; }
+  var vals=keys.map(function(k){ var b=r.sleep.log[k].bed||'23:30'; var p=b.split(':'); return (+p[0])*60+(+p[1]); });
+  box.innerHTML=sparkline(vals,{h:110,color:'#5B6CF9',fill:'rgba(91,108,249,.12)'});
+}
+function renderRiseChart(r){
+  var box=document.getElementById('riseChart'); if(!box) return;
+  var keys=Object.keys(r.rise.log).sort().slice(-14);
+  if(!keys.length){ box.innerHTML='<div class="empty-state"><p>记录早起后查看趋势</p></div>'; return; }
+  var vals=keys.map(function(k){ var b=r.rise.log[k].time||'06:30'; var p=b.split(':'); return (+p[0])*60+(+p[1]); });
+  box.innerHTML=sparkline(vals,{h:110,color:'#FA8C16',fill:'rgba(250,140,22,.12)'});
+}
+function renderSmokeList(r){
+  var box=document.getElementById('smokeList'); if(!box) return;
+  var keys=Object.keys(r.smoke.log).sort().reverse();
+  box.innerHTML = keys.length? keys.map(function(k){
+    var x=r.smoke.log[k];
+    return '<div class="list-item">'+
+      '<div class="li-icon" style="background:'+(x.smoked?'#FFF1F0':'#F6FFED')+'">'+(x.smoked?'💔':'✅')+'</div>'+
+      '<div class="li-info"><div class="li-title">'+(x.smoked?'破戒':'未吸烟')+'</div><div class="li-sub">'+k+(x.urge?(' · 冲动 '+x.urge+' 次'):'')+(x.note?(' · '+esc(x.note)):'')+'</div></div>'+
+      '<span class="li-del" onclick="deleteSmoke(\''+k+'\')">🗑</span></div>';
+  }).join('') : '<div class="empty-state"><div class="icon">🚭</div><p>还没有打卡记录</p></div>';
+  setText('smokeListTitle','（共 '+keys.length+' 次）');
+}
+function deleteSmoke(k){ var r=getRoutine(); delete r.smoke.log[k]; saveRoutine(r); renderRoutine(); toast('已删除'); }
+function renderSmokeChart(r, days){
+  var box=document.getElementById('smokeChart'); if(!box) return;
+  if(!r.smoke.quitDate){ box.innerHTML='<div class="empty-state"><p>在「设置」里填写戒烟日期后查看收益曲线</p></div>'; return; }
+  var perDay=r.smoke.perDay||20, price=r.smoke.price||24, per=perDay*price;
+  var cum=[]; var total=0;
+  for(var i=0;i<=days;i++){
+    var dt=new Date(r.smoke.quitDate+'T00:00:00'); dt.setDate(dt.getDate()+i);
+    var key=_ymd(dt.getFullYear(),dt.getMonth(),dt.getDate());
+    var smoked = r.smoke.log[key] && r.smoke.log[key].smoked;
+    total += smoked? 0 : per;
+    cum.push(total);
+  }
+  if(cum.length>60){ var step=Math.ceil(cum.length/60), samp=[];
+    for(var j=0;j<cum.length;j+=step) samp.push(cum[j]);
+    samp.push(cum[cum.length-1]); cum=samp; }
+  box.innerHTML='<div style="font-size:12px;color:var(--text-light);margin-bottom:4px">累计已省下 ¥'+total.toLocaleString()+'</div>'+sparkline(cum,{h:120,color:'#13C2C2',fill:'rgba(19,194,194,.15)'});
+}
+function renderWeightList(r){
+  var box=document.getElementById('weightList'); if(!box) return;
+  var keys=Object.keys(r.weight.log).sort().reverse();
+  box.innerHTML = keys.length? keys.map(function(k){
+    var x=r.weight.log[k];
+    return '<div class="list-item">'+
+      '<div class="li-icon" style="background:#FCE4F0">⚖️</div>'+
+      '<div class="li-info"><div class="li-title">'+x.kg+' kg</div><div class="li-sub">'+k+(x.note?(' · '+esc(x.note)):'')+'</div></div>'+
+      '<span class="li-del" onclick="deleteWeight(\''+k+'\')">🗑</span></div>';
+  }).join('') : '<div class="empty-state"><div class="icon">⚖️</div><p>还没有体重记录</p></div>';
+  setText('weightListTitle','（共 '+keys.length+' 次）');
+}
+function deleteWeight(k){ var r=getRoutine(); delete r.weight.log[k]; saveRoutine(r); renderRoutine(); toast('已删除'); }
+function renderWeightChart(r){
+  var box=document.getElementById('weightChart'); if(!box) return;
+  var keys=Object.keys(r.weight.log).sort();
+  if(!keys.length){ box.innerHTML='<div class="empty-state"><p>记录体重后查看趋势</p></div>'; setText('weightChartNote',''); return; }
+  var vals=keys.map(function(k){return r.weight.log[k].kg;});
+  var min=Math.min.apply(null,vals), max=Math.max.apply(null,vals); var span=(max-min)||1;
+  var html=vals.map(function(v,i){
+    var bh=Math.round(((v-min)/span)*(100-30)+30);
+    var up = i>0 && v>vals[i-1];
+    return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">'+
+      '<div style="width:100%;height:'+bh+'px;background:linear-gradient(to top,'+(up?'#FF4D4F':'#EB2F96')+',#F759AB);border-radius:4px 4px 0 0"></div>'+
+      '<span style="font-size:9px;color:var(--text-light)">'+r.weight.log[keys[i]].kg+'</span></div>';
+  }).join('');
+  box.innerHTML='<div style="display:flex;align-items:flex-end;gap:4px;height:120px;padding:6px 0">'+html+'</div>';
+  setText('weightChartNote','单位：kg · 共 '+keys.length+' 次记录');
+}
+function _val(id){ var e=document.getElementById(id); return e? e.value:''; }
+function _setVal(id,v){ var e=document.getElementById(id); if(e) e.value=v; }
+function openRoutineSettings(){
+  var r=getRoutine();
+  _setVal('setSleepBed', r.sleep.targetBed||'23:30');
+  _setVal('setSleepRise', r.sleep.targetRise||'06:30');
+  _setVal('setRiseTarget', r.rise.target||'06:30');
+  _setVal('setSmokeQuit', r.smoke.quitDate||'');
+  _setVal('setSmokePerDay', r.smoke.perDay||20);
+  _setVal('setSmokePrice', r.smoke.price||24);
+  _setVal('setSmokeGoal', r.smoke.goal||365);
+  _setVal('setWeightHeight', r.weight.height||175);
+  _setVal('setWeightTarget', r.weight.target||70);
+  var m=document.getElementById('routineModal'); if(m){ m.style.display='flex'; m.onclick=function(e){ if(e.target===m) closeModal('routineModal'); }; }
+}
+function saveRoutineSettings(){
+  var r=getRoutine();
+  r.sleep.targetBed = _val('setSleepBed')||'23:30';
+  r.sleep.targetRise = _val('setSleepRise')||'06:30';
+  r.rise.target = _val('setRiseTarget')||'06:30';
+  r.smoke.quitDate = _val('setSmokeQuit')||r.smoke.quitDate;
+  r.smoke.perDay = parseInt(_val('setSmokePerDay')||'20',10);
+  r.smoke.price = parseFloat(_val('setSmokePrice')||'24');
+  r.smoke.goal = parseInt(_val('setSmokeGoal')||'365',10);
+  r.weight.height = parseFloat(_val('setWeightHeight')||'175');
+  r.weight.target = parseFloat(_val('setWeightTarget')||'70');
+  saveRoutine(r); closeModal('routineModal'); renderRoutine(); toast('已保存设置');
+}
+
 /* ---------- 健身渲染 ---------- */
 function renderFitness(){
   var f=getFit(); var cur=_monthKey(_today());
@@ -3225,8 +3584,8 @@ function saveFitness(){
 }
 
 function renderAllLife(){
-  ['expDate','funDate','tvDate','vsDate','sleepDate','riseDate','smokeDate','weightDate','fitDate'].forEach(setDateDefault);
-  renderTodo(); renderFun(); renderTravel(); renderMoney(); renderRoutine(); renderFitness(); renderVisits();
+  ['expDate','funDate','tvDate','vsDate','sleepDate','riseDate','smokeDate','weightDate','fitDate','incDate','chkDate','logDate'].forEach(setDateDefault);
+  renderTodo(); renderFun(); renderTravel(); renderMoney(); renderRoutine(); renderFitness(); renderVisits(); renderClientHub(); renderHome(); renderJournal();
 }
 
 function wbSave(){
@@ -3253,8 +3612,10 @@ function wbRestore(user){
   renderEngCheck();        // 用真实学习数据覆盖打卡页假数字
   wbSyncSidebar();
   initCanvas();
+  getClients();          // 确保客户数据已播种
+  syncAllClientsToPerf();// 客户成交 → 业绩 单一数据源打通
   renderPerformance();   // 用统一业绩数据覆盖所有写死的统计数字
-  renderAllLife();       // 待办/娱乐/记账/作息/健身 全部从数据层动态渲染
+  renderAllLife();       // 待办/娱乐/记账/作息/健身/客户/首页 全部从数据层动态渲染
   renderEngCheck();      // 英语打卡（含整月日历）
 }
 
@@ -3264,25 +3625,11 @@ function getPerf(){
   let d=null;
   try { d = JSON.parse(localStorage.getItem('wb_perf_'+WB_SESSION)); } catch(e){}
   if(!d || !Array.isArray(d.records)){
-    // 种子数据：取自原演示业务，统一为可计算的结构（保证数字真实且一致）
-    d = {
-      monthlyTarget: 500000,
-      commissionRate: 0.10,
-      records: [
-        {type:'财险', name:'企业财产险',     client:'华为技术',   premium:86000,  fee:0,    status:'承保',   date:'2026-08-01'},
-        {type:'财险', name:'企业财产险',     client:'万达商业',   premium:86000,  fee:0,    status:'承保',   date:'2026-07-28'},
-        {type:'财险', name:'建筑工程一切险', client:'中铁建设',   premium:120000, fee:0,    status:'承保',   date:'2026-07-20'},
-        {type:'财险', name:'货物运输险',     client:'洋帆货运',   premium:18500,  fee:0,    status:'承保',   date:'2026-07-15'},
-        {type:'财险', name:'雇主责任险',     client:'中建三局',   premium:45000,  fee:0,    status:'承保',   date:'2026-07-10'},
-        {type:'其他', name:'企财险续保',     client:'万达商业',   premium:86000,  fee:0,    status:'承保',   date:'2026-08-02'},
-        {type:'其他', name:'货运险续保',     client:'洋帆货运',   premium:18500,  fee:0,    status:'承保',   date:'2026-07-30'},
-        {type:'保函', name:'投标保函',       client:'中建三局',   premium:5000000,fee:18000, status:'审批中', date:'2026-07-25'},
-        {type:'保函', name:'履约保函',       client:'中铁建设',   premium:8000000,fee:20000, status:'已出具', date:'2026-07-18'},
-        {type:'保函', name:'投标保函',       client:'中交集团',   premium:3000000,fee:12000, status:'材料准备',date:'2026-07-22'},
-        {type:'保函', name:'预付款保函',     client:'万达商管',   premium:2000000,fee:9000,  status:'已出具', date:'2026-07-12'}
-      ]
-    };
+    // 业绩记录统一由「成交客户」派生（单一数据源，杜绝写死/重复）
+    d = { monthlyTarget:500000, commissionRate:0.10, records:[] };
     savePerf(d);
+    getClients();          // 确保客户已播种
+    syncAllClientsToPerf(); // 由成交客户生成业绩记录
   }
   return d;
 }
@@ -3310,17 +3657,62 @@ function fmtMoney(n){
 }
 function _q(sel,root){ return (root||document).querySelector(sel); }
 function _qa(sel,root){ return Array.from((root||document).querySelectorAll(sel)); }
+// 首页：所有面板实时联动真实数据
+function renderHome(){
+  try {
+    var todos = getTodos();
+    setText('homeTodo', todos.filter(function(t){return !t.done;}).length);
+    var d = getPerf(); var s = perfStats(d);
+    setText('homeCommission', fmtMoney(s.commission));
+    setText('homePerfPct', s.pct+'%');
+    var eng = computeStreak(); setText('homeStreak', eng);
+    // 问候语 + 日期
+    var dt = new Date(); var wd = '日一二三四五六'[dt.getDay()];
+    var g = document.getElementById('homeGreeting');
+    if(g) g.textContent = (dt.getHours()<12?'早上好':dt.getHours()<18?'下午好':'晚上好')+' 👋';
+    var sub = document.querySelector('#page-home .hero-banner .sub-text');
+    if(sub) sub.textContent = (dt.getMonth()+1)+'月'+dt.getDate()+'日 · 星期'+'日一二三四五六'[dt.getDay()];
+    // 生活一眼看
+    var life = document.querySelector('#page-home .card[style*="f8f9fc"]');
+    if(life){
+      var rt = getRoutine(); var fit = getFit();
+      var sleepStreak = streakCount(Object.keys((rt.sleep&&rt.sleep.log)||{}));
+      // 本周健身次数
+      var monday = new Date(dt); monday.setDate(dt.getDate()-((dt.getDay()+6)%7));
+      var fitWeek = Object.keys((fit.log)||{}).filter(function(k){ var dd=new Date(k); return dd>=monday; }).length;
+      life.innerHTML = '🌙 作息：连续早睡 <b>'+sleepStreak+'</b> 天 ｜ 🔤 英语：连续打卡 <b>'+eng+'</b> 天 ｜ 🏃 健身：本周 <b>'+fitWeek+'</b> 次';
+    }
+    // 今日重点（动态聚合：待办 + 客户跟进）
+    var focus = document.getElementById('homeFocus');
+    if(focus){
+      var cls = getClients();
+      var fItems = [];
+      todos.filter(function(t){return !t.done;}).slice(0,3).forEach(function(t){
+        fItems.push({icon:'💰', title:t.text, sub:(t.cat||'待办')+' · '+(t.date?String(t.date).slice(5):'今天'), page:'todo'});
+      });
+      cls.filter(function(c){return (c.tags||[]).indexOf('考虑')>=0||(c.tags||[]).indexOf('已报价')>=0;}).slice(0,2).forEach(function(c){
+        fItems.push({icon:'👤', title:'跟进 '+c.name, sub:'客户 · '+(c.company||c.type||'待跟进'), page:'client'});
+      });
+      if(!fItems.length) fItems.push({icon:'🎉', title:'今日无待办，状态很好！', sub:'去录入新的业绩或客户吧', page:'performance'});
+      focus.innerHTML = fItems.map(function(it){
+        return '<div class="list-item"><div class="li-icon" style="background:#E6F7FF">'+it.icon+'</div><div class="li-info"><div class="li-title">'+esc(it.title)+'</div><div class="li-sub">'+esc(it.sub)+'</div></div><div class="li-check" onclick="switchPage(\''+it.page+'\')">→</div></div>';
+      }).join('');
+    }
+  } catch(e){ /* 首页渲染容错 */ }
+}
 function renderPerformance(){
   const d = getPerf(); if(!d) return;
   const s = perfStats(d);
-  // hero 出单统计（按标签文字匹配，兼容旧快照）
+  const visits = getVisits();
+  const ml=document.getElementById('goalMonthLabel'); if(ml){ var nw=new Date(); ml.textContent=nw.getFullYear()+'年'+(nw.getMonth()+1)+'月 · 月度目标'; }
+  // hero 出单统计（可点击下钻看明细）
   _qa('.hero-stat').forEach(el=>{
     const lb=el.querySelector('.label'); if(!lb) return;
     const n=el.querySelector('.num'); if(!n) return;
     const t=lb.textContent.trim();
-    if(t==='财险出单') n.textContent=s.cx;
-    else if(t==='其他出单') n.textContent=s.qt;
-    else if(t==='保函出单') n.textContent=s.bh;
+    if(t==='财险出单'){ n.textContent=s.cx; el.style.cursor='pointer'; el.onclick=function(){showPerfDetail('财险');}; }
+    else if(t==='其他出单'){ n.textContent=s.qt; el.style.cursor='pointer'; el.onclick=function(){showPerfDetail('其他');}; }
+    else if(t==='保函出单'){ n.textContent=s.bh; el.style.cursor='pointer'; el.onclick=function(){showPerfDetail('保函');}; }
   });
   // 业绩看板：副标题 + 进度环
   const board=_q('#perf-board');
@@ -3344,37 +3736,91 @@ function renderPerformance(){
     const a=row.querySelector(':scope > div:first-child div[style*="font-weight:600"]'); if(a) a.textContent=fmtMoney(s.premium);
     const b=row.querySelector(':scope > div:last-child div[style*="font-weight:600"]'); if(b) b.textContent=fmtMoney(s.fee);
   }
+  // 目标分解（由记录动态计算）
+  const cur=_monthKey(_today());
+  var lm=new Date(); lm.setMonth(lm.getMonth()-1);
+  const lastKey=lm.getFullYear()+'-'+String(lm.getMonth()+1).padStart(2,'0');
+  const newPremium=d.records.filter(r=>(r.type==='财险'||r.type==='其他') && _monthKey(r.date)===cur && (r.note||'').indexOf('续保')<0).reduce((a,r)=>a+(+r.premium||0),0);
+  const lastNew=d.records.filter(r=>(r.type==='财险'||r.type==='其他') && _monthKey(r.date)===lastKey && (r.note||'').indexOf('续保')<0).reduce((a,r)=>a+(+r.premium||0),0);
+  const renewRecs=d.records.filter(r=>(r.note||'').indexOf('续保')>=0 && _monthKey(r.date)===cur);
+  const renewPremium=renewRecs.reduce((a,r)=>a+(+r.premium||0),0);
+  const feeRecs=d.records.filter(r=>r.type==='保函');
+  const feeSum=feeRecs.reduce((a,r)=>a+(+r.fee||0),0);
   _qa('.pb-card').forEach(c=>{
-    const lab=c.querySelector('.pb-label'); if(lab && lab.textContent.trim()==='预计佣金'){ const v=c.querySelector('.pb-value'); if(v) v.textContent=fmtMoney(s.commission); }
+    const lab=c.querySelector('.pb-label'); if(!lab) return;
+    const v=c.querySelector('.pb-value'); if(!v) return;
+    const sub=c.querySelector('.pb-sub');
+    const t=lab.textContent.trim();
+    if(t==='本月新单保费'){ v.textContent=fmtMoney(newPremium); if(sub){ if(newPremium>0 && lastNew>0){ var pct=Math.round((newPremium-lastNew)/lastNew*100); sub.textContent=(pct>=0?'↑ 较上月 +':'↓ 较上月 ')+Math.abs(pct)+'%'; } else if(newPremium>0){ sub.textContent='本月新单已录入'; } else { sub.textContent='本月暂无新单'; } } }
+    else if(t==='续保保费'){ v.textContent=fmtMoney(renewPremium); if(sub) sub.textContent=renewRecs.length+' 笔续保'; }
+    else if(t==='保函手续费'){ v.textContent=fmtMoney(feeSum); if(sub) sub.textContent=feeRecs.length+' 份保函'; }
+    else if(t==='预计佣金'){ v.textContent=fmtMoney(s.commission); }
   });
+  // 业绩趋势（近 6 个月保费，动态）
+  const tbox=document.getElementById('perfTrend');
+  if(tbox){
+    const now=new Date(); const months=[];
+    for(let i=5;i>=0;i--){ months.push(new Date(now.getFullYear(), now.getMonth()-i, 1)); }
+    const sums=months.map(function(dt){ const ym=dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0'); return d.records.filter(function(r){return (r.date||'').slice(0,7)===ym;}).reduce(function(a,r){return a+(+r.premium||0);},0); });
+    const max=Math.max.apply(null,sums)||1;
+    const html=sums.map(function(v,i){ const dt=months[i]; const isCur=(dt.getFullYear()===now.getFullYear()&&dt.getMonth()===now.getMonth()); const bh=Math.round(v/max*150)+(v>0?8:2);
+      return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:'+bh+'px;background:linear-gradient(to top,'+(isCur?'#5B6CF9':'var(--primary)')+',#7CB3F0);border-radius:4px 4px 0 0"></div><span style="font-size:10px;color:'+(isCur?'var(--primary)':'var(--text-light)')+';font-weight:'+(isCur?'600':'400')+'">'+(dt.getMonth()+1)+'月</span></div>';
+    }).join('');
+    tbox.innerHTML='<div style="height:180px;display:flex;align-items:end;gap:6px;padding:10px 0">'+html+'</div><div style="text-align:center;font-size:11px;color:var(--text-light);padding-top:8px">单位：元 | 数据截至今日（共 '+d.records.length+' 笔业绩）</div>';
+  }
   // 收入页三项
   const inc=_q('.fo-item.income .fo-value'); if(inc) inc.textContent=fmtMoney(s.premium);
   const com=_q('.fo-item.commission .fo-value'); if(com) com.textContent=fmtMoney(s.commission);
   const fee=_q('.fo-item.guarantee-fee .fo-value'); if(fee) fee.textContent=fmtMoney(s.fee);
-  // 保单统计
+  // 保单统计（由成交客户派生）
+  const cls=getClients();
+  const pol=cls.filter(c=>(c.tags||[]).indexOf('成交')>=0 && (c.type==='财产险'||c.dealType==='财险'||c.dealType==='其他'));
+  const expiring=pol.filter(c=>c.dealStatus==='审批中'||c.dealStatus==='材料准备').length;
+  const renewing=pol.filter(c=>(c.tags||[]).indexOf('待续保')>=0 || (c.note||'').indexOf('续保')>=0).length;
   _qa('.ps-card').forEach(c=>{
     const lab=c.querySelector('.ps-label'); if(!lab) return;
     const n=c.querySelector('.ps-num'); if(!n) return;
     const t=lab.textContent.trim();
-    if(t==='有效保单') n.textContent=s.totalPolicies;
+    if(t==='有效保单') n.textContent=pol.filter(c=>PERF_ISSUED.indexOf(c.dealStatus)>=0).length;
     else if(t==='本月保费') n.textContent=fmtMoney(s.premium);
-    else if(t==='即将到期') n.textContent=3;
-    else if(t==='待续保') n.textContent=5;
+    else if(t==='即将到期') n.textContent=expiring;
+    else if(t==='待续保') n.textContent=renewing;
   });
   // 保函统计
   _qa('#cl-guarantee div').forEach(el=>{
     const t=el.textContent.trim();
     if(t==='在保余额'||t==='累计手续费'){ const num=el.previousElementSibling; if(num) num.textContent=(t==='在保余额')?fmtMoney(s.guaranteeBalance):fmtMoney(s.fee); }
   });
-  // 首页背景统计
-  _qa('.study-stats .ss-item').forEach(el=>{
-    const lab=el.querySelector('.ss-label'); if(!lab) return;
-    const n=el.querySelector('.ss-num'); if(!n) return;
-    const t=lab.textContent.trim();
-    if(t==='今日待办'){ const tl=_q('#todoList'); n.textContent= tl? tl.querySelectorAll('.todo-item').length:0; }
-    else if(t==='待结算佣金') n.textContent=fmtMoney(s.commission);
-    else if(t==='本月业绩') n.textContent=s.pct+'%';
-  });
+  // 今日概览（动态）
+  const di=_q('#perfDateInfo'); if(di){ var dt=new Date(); di.textContent=(dt.getMonth()+1)+'月'+dt.getDate()+'日 · 周'+'日一二三四五六'[dt.getDay()]; }
+  const tg=_q('#perfTodayGrid');
+  if(tg){
+    const todos=getTodos(); const todoPending=todos.filter(t=>!t.done).length;
+    const pipeline=cls.filter(c=>(c.tags||[]).indexOf('考虑')>=0||(c.tags||[]).indexOf('已报价')>=0).length;
+    const bhCnt=cls.filter(c=>(c.tags||[]).indexOf('成交')>=0&&c.dealType==='保函').length;
+    const vToday=visits.filter(v=>(v.date||'').slice(0,10)===_today()).length;
+    const tiles=[
+      {icon:'✅',name:'工作待办',desc:todoPending+'项待处理',status:todoPending?('⏳ '+todoPending):'✓ 已完成',cls:todoPending?'pending':'done',page:'todo'},
+      {icon:'👥',name:'客户跟进',desc:pipeline+'个意向客户',status:pipeline?('🔔 '+pipeline):'暂无',cls:pipeline?'pending':'done',page:'client'},
+      {icon:'📋',name:'保单跟踪',desc:renewing+'份将续保',status:renewing?('🔔 '+renewing):'正常',cls:renewing?'pending':'done',page:'client'},
+      {icon:'📜',name:'保函业务',desc:bhCnt+'份保函在保',status:bhCnt?('✓ '+bhCnt):'暂无',cls:'done',page:'client'},
+      {icon:'🤝',name:'拜访计划',desc:'今日'+vToday+'次拜访',status:vToday?('⏰ '+vToday):'未安排',cls:vToday?'pending':'done',page:'client'},
+      {icon:'📝',name:'工作日志',desc:'记录今日复盘',status:'待记录',cls:'pending',page:'todo'}
+    ];
+    tg.innerHTML=tiles.map(function(t){ return '<div class="today-item" onclick="switchPage(\''+t.page+'\')"><div class="ti-header"><span class="ti-icon">'+t.icon+'</span><span class="ti-status '+t.cls+'">'+t.status+'</span></div><div class="ti-name">'+t.name+'</div><div class="ti-desc">'+t.desc+'</div></div>'; }).join('');
+  }
+  // 近期动态（由记录/拜访/客户动态生成）
+  const fb=_q('#perfFeedBody');
+  if(fb){
+    var items=[];
+    d.records.slice().sort(function(a,b){return (b.date||'').localeCompare(a.date||'');}).slice(0,3).forEach(function(r){
+      items.push('📋 <b>'+esc(r.name||r.type)+'</b> '+esc(r.client||'')+' · '+fmtMoney(r.premium||r.fee||0)+' · '+esc(r.status||''));
+    });
+    visits.slice().sort(function(a,b){return (b.date||'').localeCompare(a.date||'');}).slice(0,2).forEach(function(v){
+      items.push('🤝 拜访 <b>'+esc(v.client||'')+'</b> · '+esc(v.purpose||''));
+    });
+    fb.innerHTML = items.length? items.map(function(x){return '<div>'+x+'</div>';}).join('') : '<div style="color:var(--text-light)">暂无动态，去录入第一笔成交吧 🎯</div>';
+  }
   // 收入构成饼图
   const pieWrap=_q('#perf-income');
   if(pieWrap){
@@ -3395,23 +3841,71 @@ function renderPerformance(){
     });
   }
 }
+// 业绩明细下钻（点击出单面板）
+function showPerfDetail(type){
+  const d=getPerf(); if(!d) return;
+  const rows=d.records.filter(r=>r.type===type).sort(function(a,b){return (b.date||'').localeCompare(a.date||'');});
+  const sum=rows.reduce(function(s,r){return s+(+r.premium||0)+(+r.fee||0);},0);
+  const typeName={'财险':'财险出单','其他':'其他出单','保函':'保函出单'}[type]||type;
+  var html='<div class="modal-card"><div class="modal-title">'+typeName+' · '+rows.length+' 笔 / '+fmtMoney(sum)+'</div>'+
+    '<div style="max-height:55vh;overflow:auto;margin:10px 0">';
+  if(rows.length===0) html+='<div class="empty-state"><div class="icon">📭</div><p>暂无'+typeName+'记录</p></div>';
+  rows.forEach(function(r){
+    html+='<div class="list-item" style="cursor:default"><div class="li-icon" style="background:#E6F7FF">📋</div>'+
+      '<div class="li-info" style="flex:1"><div class="li-title">'+esc(r.name||type)+'</div><div class="li-sub">'+esc(r.client||'')+(r.client?' · ':'')+esc(r.date||'')+' · '+esc(r.status||'')+'</div></div>'+
+      '<div class="li-extra" style="font-weight:600">'+fmtMoney((+r.premium||0)+(+r.fee||0))+'</div>'+
+      '<span class="li-del" onclick="deletePerf(\''+r.id+'\')">🗑</span></div>';
+  });
+  html+='</div><button class="btn-primary" style="width:100%" onclick="closeModal(\'perfModal\')">关闭</button></div>';
+  var m=document.getElementById('perfModal'); if(!m) return;
+  m.innerHTML=html; m.style.display='flex';
+  m.onclick=function(e){ if(e.target===m) closeModal('perfModal'); };
+}
+function deletePerf(id){
+  const d=getPerf(); if(!d) return;
+  d.records=d.records.filter(r=>r.id!==id);
+  savePerf(d); renderPerformance(); renderClientHub(); renderHome();
+  toast('已删除该业绩记录');
+}
 function saveIncome(){
   const d = getPerf(); if(!d){ toast('请先登录'); return; }
   const amt = parseFloat(document.getElementById('incAmount') && document.getElementById('incAmount').value) || 0;
   const type = document.getElementById('incType') ? document.getElementById('incType').value : '保费收入';
   if(!amt){ toast('请输入金额'); return; }
-  const today = new Date().toISOString().slice(0,10);
+  const today = (document.getElementById('incDate') && document.getElementById('incDate').value) || _today();
   if(type==='佣金到账'){
-    toast('佣金已计入统计');
+    d.records.push({id:'inc_'+_uid(), type:'其他', name:'佣金到账', client:'', premium:amt, fee:0, status:'承保', date:today});
+    savePerf(d);
     if(document.getElementById('incAmount')) document.getElementById('incAmount').value='';
-    renderPerformance(); return;
+    renderPerformance(); renderHome(); toast('佣金已计入统计'); return;
   }
-  let rec = {type:'财险', name:type, client:'', premium:amt, fee:0, status:'承保', date:today};
+  let rec = {id:'inc_'+_uid(), type:'财险', name:type, client:'', premium:amt, fee:0, status:'承保', date:today};
   if(type==='续保奖励'){ rec.type='其他'; rec.name='续保奖励'; }
   else if(type==='保函手续费'){ rec.type='保函'; rec.fee=amt; rec.premium=0; rec.name='保函手续费'; rec.status='已出具'; }
-  d.records.push(rec); savePerf(d); renderPerformance();
+  d.records.push(rec); savePerf(d); renderPerformance(); renderHome();
   if(document.getElementById('incAmount')) document.getElementById('incAmount').value='';
   toast('已记录到业绩统计');
+}
+
+function saveJournal(){
+  var txt=(document.getElementById('journalText')&&document.getElementById('journalText').value||'').trim();
+  if(!txt){ toast('写点什么再保存吧'); return; }
+  var moodEl=document.querySelector('#td-journal .mood-btn.selected');
+  var mood=moodEl?moodEl.textContent.trim():'';
+  var date=(document.getElementById('logDate')&&document.getElementById('logDate').value)||_today();
+  var list=_load('journal',[]); if(!Array.isArray(list)) list=[];
+  list.unshift({date:date, mood:mood, text:txt});
+  _save('journal',list);
+  if(document.getElementById('journalText')) document.getElementById('journalText').value='';
+  renderJournal(); toast('随笔已保存');
+}
+function renderJournal(){
+  var box=document.getElementById('journalList'); if(!box) return;
+  var list=_load('journal',[]); if(!Array.isArray(list)) list=[];
+  if(!list.length){ box.innerHTML='<div class="empty-state"><div class="icon">📒</div><p>写下今日的收获与复盘。<br>在这里记录工作事项、客户反馈，<br>不必刻意长篇大论。</p></div>'; return; }
+  box.innerHTML=list.map(function(j){
+    return '<div style="padding:12px 0;border-bottom:1px solid var(--border)"><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-light)"><span>'+esc(j.date||'')+'</span><span>'+esc(j.mood||'')+'</span></div><div style="font-size:14px;margin-top:4px;white-space:pre-wrap;word-break:break-word">'+esc(j.text||'')+'</div></div>';
+  }).join('');
 }
 
 function wbLoginOK(user){
